@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Kitesurfing Android Project</string>
+    <string name="base_url">https://internship-2019.herokuapp.com</string>
+    <string name="user_get">api-user-get</string>
+    <string name="spot_get_all">api-spot-get-all</string>
+    <string name="spot_get_details">api-spot-get-details</string>
+    <string name="spot_get_countries">api-spot-get-countries</string>
+    <string name="spot_favorites_add">api-spot-favorites-add</string>
+    <string name="spot_favorites_remove">api-spot-favorites-remove</string>
+
+    <string name="valid_email">andrei.popa2199@gmail.com</string>
+
 </resources>
