@@ -47,6 +47,6 @@ public interface KitesurfingAPI {
     @Headers({"Content-Type: application/json",
             "token: StdwDgMrAn"})
     @POST("/api-spot-favorites-remove")
-    Call<Favorites_Remove_Result> getFavoritesAdd(@Body Favorites_Remove_Body body);
+    Call<Favorites_Remove_Result> getFavoritesRemove(@Body Favorites_Remove_Body body);
 
 }
