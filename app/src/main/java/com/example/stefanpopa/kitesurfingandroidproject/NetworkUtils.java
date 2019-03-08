@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Result;
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_countries_models.Spot_Countries_Result;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_models.Spot_Details_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_models.Spot_Details_Result;
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Body;
@@ -46,6 +47,13 @@ public class NetworkUtils {
         Log.d(MainActivity.TAG,"onResponse:"+
             "\nToken is: "+response.body().getResult_children().getToken()+
             "\nEmail is: "+response.body().getResult_children().getEmail());
+    }
+
+    public static void displayResponseGetSpotCountries(Response<Spot_Countries_Result> response){
+        int count = response.body().getCountries().size();
+        for(int i=0;i<count;i++){
+            Log.d(MainActivity.TAG,response.body().getCountries().get(i));
+        }
     }
 
     public static void sendNetworkSpotDetailsRequest(Spot_Details_Body body,String baseUrl){
@@ -116,6 +124,30 @@ public class NetworkUtils {
 
             @Override
             public void onFailure(Call<Auth_Result> call, Throwable t) {
+                Log.d(MainActivity.TAG,"onFailure: Something went wrong with the server");
+                Log.d(MainActivity.TAG,t.toString());
+            }
+        });
+    }
+
+    public static void sendNetworkGetAllCountries(String baseUrl){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        KitesurfingAPI kitesurfingAPI = retrofit.create(KitesurfingAPI.class);
+
+        Call<Spot_Countries_Result> call = kitesurfingAPI.getSpotCountries();
+        call.enqueue(new Callback<Spot_Countries_Result>() {
+            @Override
+            public void onResponse(Call<Spot_Countries_Result> call, Response<Spot_Countries_Result> response) {
+                Log.d(MainActivity.TAG,"onResponse: The call on the api-spot-get-countries endpoint has been succesful");
+                displayResponseGetSpotCountries(response);
+            }
+
+            @Override
+            public void onFailure(Call<Spot_Countries_Result> call, Throwable t) {
                 Log.d(MainActivity.TAG,"onFailure: Something went wrong with the server");
                 Log.d(MainActivity.TAG,t.toString());
             }

@@ -28,10 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
         //Auth_Body auth = new Auth_Body(getString(R.string.valid_email));
         //Spot_All_Body spot = new Spot_All_Body(null,70);
-        Spot_Details_Body details = new Spot_Details_Body("bz1vaqsrgq");
-        NetworkUtils.sendNetworkSpotDetailsRequest(details,getString(R.string.base_url));
+        //Spot_Details_Body details = new Spot_Details_Body("bz1vaqsrgq");
+        //NetworkUtils.sendNetworkSpotDetailsRequest(details,getString(R.string.base_url));
        // NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body(null,0),getString(R.string.base_url));
        // sendNetworkAuthRequest(spot);
+        NetworkUtils.sendNetworkGetAllCountries(getString(R.string.base_url));
     }
 
     private void sendNetworkAuthRequest(Spot_All_Body spot){
