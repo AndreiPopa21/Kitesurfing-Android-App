@@ -1,5 +1,6 @@
 package com.example.stefanpopa.kitesurfingandroidproject;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 
@@ -148,7 +149,7 @@ public class NetworkUtils {
         });
     }
 
-    public static void sendNetworkSpotAllRequest(Spot_All_Body body,String baseUrl){
+    public static void sendNetworkSpotAllRequest(Spot_All_Body body,String baseUrl,Context context){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -164,6 +165,9 @@ public class NetworkUtils {
                 Log.d(MainActivity.TAG,"onResponse: the call on the api-spot-get-all endpoint has been succesful");
                 Log.d(MainActivity.TAG,"onResponse: the code is: "+response.code());
                 NetworkUtils.displayResponseGetAllSpot(response);
+                if(response.code()==200){
+                    //generate RecyclerView
+                }
             }
 
             @Override
