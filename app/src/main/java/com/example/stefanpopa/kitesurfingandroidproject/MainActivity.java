@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
        // NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body(null,0),getString(R.string.base_url));
        // sendNetworkAuthRequest(spot);
         //NetworkUtils.sendNetworkGetAllCountries(getString(R.string.base_url));
-        NetworkUtils.sendNetworkAddFavorites(new Favorites_Add_Body("hfjlTbb4NC"),getString(R.string.base_url));
-        NetworkUtils.sendNetworkRemoveFavorites(new Favorites_Remove_Body("hfjlTbb4NC"),getString(R.string.base_url));
+        //NetworkUtils.sendNetworkAddFavorites(new Favorites_Add_Body("hfjlTbb4NC"),getString(R.string.base_url));
+        //NetworkUtils.sendNetworkRemoveFavorites(new Favorites_Remove_Body("hfjlTbb4NC"),getString(R.string.base_url));
     }
 
     private void sendNetworkAuthRequest(Spot_All_Body spot){

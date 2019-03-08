@@ -67,6 +67,7 @@ public class NetworkUtils {
                 Log.d(MainActivity.TAG,"Result is: "+response.body().getResult());
                 break;
             case 500:
+                Log.d(MainActivity.TAG,"Result could not be displayed due to 500 code");
                 //Log.d(MainActivity.TAG,"SASASASASA");
                 //Log.d(MainActivity.TAG,"EEEE: "+response.errorBody().toString());
                 /*Log.d(MainActivity.TAG, "Error is: "+response.body().getError().getMessage()+
@@ -85,6 +86,7 @@ public class NetworkUtils {
                 Log.d(MainActivity.TAG,"Result is: "+response.body().getResult());
                 break;
             case 500:
+                Log.d(MainActivity.TAG,"Result could not be displayed due to 500 code");
                 //Log.d(MainActivity.TAG,"SASASASASA");
                 //Log.d(MainActivity.TAG,"EEEE: "+response.errorBody().toString());
                 /*Log.d(MainActivity.TAG, "Error is: "+response.body().getError().getMessage()+
@@ -194,7 +196,12 @@ public class NetworkUtils {
         });
     }
 
-    public static void sendNetworkAddFavorites(Favorites_Add_Body body,String baseUrl){
+    public static void sendNetworkAddFavorites(Favorites_Add_Body body,String baseUrl,boolean isFavorited){
+        if(isFavorited){
+            Log.d(MainActivity.TAG,"Item with spotId: "+body.getSpotId()+" has already been favorited");
+            return;
+        }
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -222,7 +229,11 @@ public class NetworkUtils {
 
     }
 
-    public static void sendNetworkRemoveFavorites(Favorites_Remove_Body body, String baseUrl){
+    public static void sendNetworkRemoveFavorites(Favorites_Remove_Body body, String baseUrl,boolean isRemoved){
+        if(isRemoved){
+            Log.d(MainActivity.TAG,"Item with spotId: "+body.getSpotId()+" has already been removed");
+            return;
+        }
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
