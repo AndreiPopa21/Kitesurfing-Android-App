@@ -24,39 +24,64 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkUtils {
 
     public static void displayResponseGetAllSpot(Response<Spot_All_Result> response){
-        int count = response.body().getAll_result_children().size();
-        for(int i=0;i<count;i++) {
-            Log.d(MainActivity.TAG, "\nonResponse: The item " + i + " has the following details:" +
-                    "\nID is: " + response.body().getAll_result_children().get(i).getId() +
-                    "\nName is: " + response.body().getAll_result_children().get(i).getName() +
-                    "\nCountry is: " + response.body().getAll_result_children().get(i).getCountry() +
-                    "\nWhenToGo is: " + response.body().getAll_result_children().get(i).getWhenToGo() +
-                    "\nIsFavorite is: " + response.body().getAll_result_children().get(i).isFavorite());
+        switch(response.code()){
+            case 200:
+                int count = response.body().getAll_result_children().size();
+                for(int i=0;i<count;i++) {
+                    Log.d(MainActivity.TAG, "\nonResponse: The item " + i + " has the following details:" +
+                            "\nID is: " + response.body().getAll_result_children().get(i).getId() +
+                            "\nName is: " + response.body().getAll_result_children().get(i).getName() +
+                            "\nCountry is: " + response.body().getAll_result_children().get(i).getCountry() +
+                            "\nWhenToGo is: " + response.body().getAll_result_children().get(i).getWhenToGo() +
+                            "\nIsFavorite is: " + response.body().getAll_result_children().get(i).isFavorite());
+                }
+                break;
+            default:
+                Log.d(MainActivity.TAG,"Result could not be displayed due to: "+response.code()+" code");
         }
+
     }
 
     public static void displayResponseGetSpotDetails(Response<Spot_Details_Result> response){
-        Log.d(MainActivity.TAG,"The response values are following: "+
-            "\nID is: "+response.body().getDetails_result_children().getId()+
-            "\nName is: "+response.body().getDetails_result_children().getName()+
-            "\nLongitude is: "+response.body().getDetails_result_children().getLongitude()+
-            "\nLatitude is: "+response.body().getDetails_result_children().getLatitude()+
-            "\nWindProbability is: "+response.body().getDetails_result_children().getWindProbability()+
-            "\nCountry is: "+response.body().getDetails_result_children().getCountry()+
-            "\nWhenToGo is: "+response.body().getDetails_result_children().getWhenToGo()+
-            "\nIsFavorite is: "+response.body().getDetails_result_children().isFavorite());
+        switch(response.code()) {
+            case 200:
+                Log.d(MainActivity.TAG, "The response values are following: " +
+                        "\nID is: " + response.body().getDetails_result_children().getId() +
+                        "\nName is: " + response.body().getDetails_result_children().getName() +
+                        "\nLongitude is: " + response.body().getDetails_result_children().getLongitude() +
+                        "\nLatitude is: " + response.body().getDetails_result_children().getLatitude() +
+                        "\nWindProbability is: " + response.body().getDetails_result_children().getWindProbability() +
+                        "\nCountry is: " + response.body().getDetails_result_children().getCountry() +
+                        "\nWhenToGo is: " + response.body().getDetails_result_children().getWhenToGo() +
+                        "\nIsFavorite is: " + response.body().getDetails_result_children().isFavorite());
+                break;
+            default:
+                Log.d(MainActivity.TAG, "Result could not be displayed due to " + response.code()+" code");
+        }
     }
 
     public static void displayResponseUserGet(Response<Auth_Result> response){
-        Log.d(MainActivity.TAG,"onResponse:"+
-            "\nToken is: "+response.body().getResult_children().getToken()+
-            "\nEmail is: "+response.body().getResult_children().getEmail());
+        switch(response.code()) {
+            case 200:
+                Log.d(MainActivity.TAG,"onResponse:"+
+                        "\nToken is: "+response.body().getResult_children().getToken()+
+                        "\nEmail is: "+response.body().getResult_children().getEmail());
+                break;
+            default:
+                Log.d(MainActivity.TAG, "Result could not be displayed due to " + response.code() + " code");
+        }
     }
 
     public static void displayResponseGetSpotCountries(Response<Spot_Countries_Result> response){
-        int count = response.body().getCountries().size();
-        for(int i=0;i<count;i++){
-            Log.d(MainActivity.TAG,response.body().getCountries().get(i));
+        switch(response.code()){
+            case 200:
+                int count = response.body().getCountries().size();
+                for(int i=0;i<count;i++){
+                    Log.d(MainActivity.TAG,response.body().getCountries().get(i));
+                }
+                break;
+            default:
+                Log.d(MainActivity.TAG,"Result could not be displayed due to "+response.code()+" code");
         }
     }
 
@@ -136,6 +161,8 @@ public class NetworkUtils {
         call.enqueue(new Callback<Spot_All_Result>() {
             @Override
             public void onResponse(Call<Spot_All_Result> call, Response<Spot_All_Result> response) {
+                Log.d(MainActivity.TAG,"onResponse: the call on the api-spot-get-all endpoint has been succesful");
+                Log.d(MainActivity.TAG,"onResponse: the code is: "+response.code());
                 NetworkUtils.displayResponseGetAllSpot(response);
             }
 
