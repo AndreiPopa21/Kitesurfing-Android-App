@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_add_models.Favorites_Add_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Result;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_models.Spot_Details_Body;
@@ -32,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
         //NetworkUtils.sendNetworkSpotDetailsRequest(details,getString(R.string.base_url));
        // NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body(null,0),getString(R.string.base_url));
        // sendNetworkAuthRequest(spot);
-        NetworkUtils.sendNetworkGetAllCountries(getString(R.string.base_url));
+        //NetworkUtils.sendNetworkGetAllCountries(getString(R.string.base_url));
+        NetworkUtils.sendNetworkAddFavorites(new Favorites_Add_Body("hfjlTbb4NC"),getString(R.string.base_url));
     }
 
     private void sendNetworkAuthRequest(Spot_All_Body spot){

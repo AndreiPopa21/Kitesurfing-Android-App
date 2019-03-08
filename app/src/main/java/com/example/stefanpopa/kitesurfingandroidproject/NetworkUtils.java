@@ -3,6 +3,8 @@ package com.example.stefanpopa.kitesurfingandroidproject;
 import android.content.res.Resources;
 import android.util.Log;
 
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_add_models.Favorites_Add_Body;
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_add_models.Favorites_Add_Result;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Result;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_countries_models.Spot_Countries_Result;
@@ -53,6 +55,24 @@ public class NetworkUtils {
         int count = response.body().getCountries().size();
         for(int i=0;i<count;i++){
             Log.d(MainActivity.TAG,response.body().getCountries().get(i));
+        }
+    }
+
+    public static void displayResponseAddFavorites(Response<Favorites_Add_Result> response){
+
+        switch(response.code()){
+            case 200:
+                Log.d(MainActivity.TAG,"Result is: "+response.body().getResult());
+                break;
+            case 500:
+                //Log.d(MainActivity.TAG,"SASASASASA");
+                //Log.d(MainActivity.TAG,"EEEE: "+response.errorBody().toString());
+                /*Log.d(MainActivity.TAG, "Error is: "+response.body().getError().getMessage()+
+                        " / "+response.body().getError().getCode()+
+                        "\nSentBodyParameters: "+response.body().getSentBodyParameters().getSpotId()+
+                        "\nSentHeaders: "+response.body().getSentHeaders().getContent_type()+
+                        " / "+response.body().getSentHeaders().getToken());*/
+                break;
         }
     }
 
@@ -152,5 +172,33 @@ public class NetworkUtils {
                 Log.d(MainActivity.TAG,t.toString());
             }
         });
+    }
+
+    public static void sendNetworkAddFavorites(Favorites_Add_Body body,String baseUrl){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        KitesurfingAPI kitesurfingAPI = retrofit.create(KitesurfingAPI.class);
+
+        Call<Favorites_Add_Result> call = kitesurfingAPI.getFavoritesAdd(body);
+        call.enqueue(new Callback<Favorites_Add_Result>() {
+            @Override
+            public void onResponse(Call<Favorites_Add_Result> call, Response<Favorites_Add_Result> response) {
+                Log.d(MainActivity.TAG,"onResponse: The call on the api-spot-favorites-add endpoint has been succesful");
+                Log.d(MainActivity.TAG,"onResponse: "+response.toString());
+                //displayResponseAddFavorites(response);
+                Log.d(MainActivity.TAG,"onResponse: code is: "+response.code());
+                displayResponseAddFavorites(response);
+            }
+
+            @Override
+            public void onFailure(Call<Favorites_Add_Result> call, Throwable t) {
+                Log.d(MainActivity.TAG,"onFailure: Something went wrong with the server");
+                Log.d(MainActivity.TAG,t.toString());
+            }
+        });
+
     }
 }

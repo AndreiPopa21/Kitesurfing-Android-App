@@ -1,5 +1,7 @@
 package com.example.stefanpopa.kitesurfingandroidproject;
 
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_add_models.Favorites_Add_Body;
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_add_models.Favorites_Add_Result;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Result;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_countries_models.Spot_Countries_Result;
@@ -34,5 +36,10 @@ public interface KitesurfingAPI {
             "token: StdwDgMrAn"})
     @POST("/api-spot-get-countries")
     Call<Spot_Countries_Result> getSpotCountries();
+
+    @Headers({"Content-Type: application/json",
+            "token: StdwDgMrAn"})
+    @POST("/api-spot-favorites-add")
+    Call<Favorites_Add_Result> getFavoritesAdd(@Body Favorites_Add_Body body);
 
 }
