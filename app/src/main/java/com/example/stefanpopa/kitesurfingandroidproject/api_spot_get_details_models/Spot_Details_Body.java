@@ -13,6 +13,10 @@ public class Spot_Details_Body {
         return spotId;
     }
 
+    public Spot_Details_Body(String spotId) {
+        this.spotId = spotId;
+    }
+
     public void setSpotId(String spotId) {
         this.spotId = spotId;
     }

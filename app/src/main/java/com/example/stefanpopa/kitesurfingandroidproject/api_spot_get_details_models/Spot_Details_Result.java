@@ -9,13 +9,13 @@ public class Spot_Details_Result {
 
     @SerializedName("result")
     @Expose
-    private ArrayList<Spot_Details_Result_Children> details_result_children;
+    private Spot_Details_Result details_result_children;
 
-    public ArrayList<Spot_Details_Result_Children> getDetails_result_children() {
+    public Spot_Details_Result getDetails_result_children() {
         return details_result_children;
     }
 
-    public void setDetails_result_children(ArrayList<Spot_Details_Result_Children> details_result_children) {
+    public void setDetails_result_children(Spot_Details_Result details_result_children) {
         this.details_result_children = details_result_children;
     }
 }

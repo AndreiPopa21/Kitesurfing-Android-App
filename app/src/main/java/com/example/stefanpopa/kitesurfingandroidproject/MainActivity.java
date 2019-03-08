@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Result;
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_models.Spot_Details_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Result;
 
@@ -26,8 +27,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Auth_Body auth = new Auth_Body(getString(R.string.valid_email));
-        Spot_All_Body spot = new Spot_All_Body(null,70);
-        sendNetworkAuthRequest(spot);
+        //Spot_All_Body spot = new Spot_All_Body(null,70);
+        Spot_Details_Body details = new Spot_Details_Body("bz1vaqsrgq");
+        NetworkUtils.sendNetworkSpotDetailsRequest(details,getString(R.string.base_url));
+       // sendNetworkAuthRequest(spot);
     }
 
     private void sendNetworkAuthRequest(Spot_All_Body spot){

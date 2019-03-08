@@ -2,6 +2,8 @@ package com.example.stefanpopa.kitesurfingandroidproject;
 
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Result;
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_models.Spot_Details_Body;
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_models.Spot_Details_Result;
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Result;
 
@@ -21,4 +23,9 @@ public interface KitesurfingAPI {
               "token: StdwDgMrAn"})
     @POST("/api-spot-get-all")
     Call<Spot_All_Result> getSpotAll(@Body Spot_All_Body spot);
+
+    @Headers({"Content-Type: application/json",
+            "token: StdwDgMrAn"})
+    @POST("/api-spot-get-details")
+    Call<Spot_Details_Result> getSpotDetails(@Body Spot_Details_Body details);
 }
