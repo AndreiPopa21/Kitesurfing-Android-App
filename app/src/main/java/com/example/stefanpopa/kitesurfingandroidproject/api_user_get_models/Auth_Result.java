@@ -1,4 +1,4 @@
-package com.example.stefanpopa.kitesurfingandroidproject.json_models.api_get_user_models;
+package com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
