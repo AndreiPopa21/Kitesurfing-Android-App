@@ -12,10 +12,10 @@ public class Spot_Details_Result_Children {
     private String name;
     @SerializedName("longitude")
     @Expose
-    private int longitude;
+    private double longitude;
     @SerializedName("latitude")
     @Expose
-    private int latitude;
+    private double latitude;
     @SerializedName("windProbability")
     @Expose
     private int windProbability;
@@ -45,19 +45,19 @@ public class Spot_Details_Result_Children {
         this.name = name;
     }
 
-    public int getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(int longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public int getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(int latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 

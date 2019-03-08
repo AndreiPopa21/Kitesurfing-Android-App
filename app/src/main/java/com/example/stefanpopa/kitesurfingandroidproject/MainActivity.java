@@ -30,29 +30,11 @@ public class MainActivity extends AppCompatActivity {
         //Spot_All_Body spot = new Spot_All_Body(null,70);
         Spot_Details_Body details = new Spot_Details_Body("bz1vaqsrgq");
         NetworkUtils.sendNetworkSpotDetailsRequest(details,getString(R.string.base_url));
+       // NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body(null,0),getString(R.string.base_url));
        // sendNetworkAuthRequest(spot);
     }
 
     private void sendNetworkAuthRequest(Spot_All_Body spot){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.base_url))
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
 
-        KitesurfingAPI kitesurfingAPI = retrofit.create(KitesurfingAPI.class);
-
-        Call<Spot_All_Result> call = kitesurfingAPI.getSpotAll(spot);
-
-        call.enqueue(new Callback<Spot_All_Result>() {
-            @Override
-            public void onResponse(Call<Spot_All_Result> call, Response<Spot_All_Result> response) {
-                NetworkUtils.displayResponseGetAllSpot(response);
-            }
-
-            @Override
-            public void onFailure(Call<Spot_All_Result> call, Throwable t) {
-                Log.d(TAG,"onFailure: Something went wrong with the server");
-            }
-        });
     }
 }
