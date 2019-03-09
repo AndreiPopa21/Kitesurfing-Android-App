@@ -18,6 +18,7 @@ import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Result;
 
 import java.nio.charset.MalformedInputException;
+import java.util.Timer;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,6 +52,7 @@ implements NetworkUtils.SpotsListFetcher{
         NetworkUtils.allListFetchListener=this;
 
         Log.d(MainActivity.TAG,"Check network connectivity: "+NetworkUtils.isNetworkAvailable(this));
+        checkNetworkEverySeconds(5000);
         //Auth_Body auth = new Auth_Body(getString(R.string.valid_email));
         //Spot_All_Body spot = new Spot_All_Body(null,70);
         //Spot_Details_Body details = new Spot_Details_Body("bz1vaqsrgq");
@@ -92,6 +94,13 @@ implements NetworkUtils.SpotsListFetcher{
         Log.d(MainActivity.TAG,"A call for the list has been established");
         listProgressBar.setVisibility(View.VISIBLE);
         NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("Morocco", 20), getString(R.string.base_url));
+    }
+
+    private void checkNetworkEverySeconds(int miliseconds){
+        Timer timer = new Timer();
+        final int MILLISECONDS = miliseconds; //5 seconds
+        timer.schedule(new CheckConnection(this), 0, MILLISECONDS);
+
     }
 
     @Override

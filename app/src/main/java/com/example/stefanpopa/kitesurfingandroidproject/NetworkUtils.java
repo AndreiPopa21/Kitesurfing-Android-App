@@ -18,6 +18,7 @@ import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_mod
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Result;
 
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -334,3 +335,21 @@ public class NetworkUtils {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
+
+class CheckConnection extends TimerTask {
+    private Context context;
+    public CheckConnection(Context context){
+        this.context = context;
+    }
+    public void run() {
+        if(NetworkUtils.isNetworkAvailable(context)){
+            //CONNECTED
+            Log.d(MainActivity.TAG,"HOT CHEESE WE HAVE THE CONneCTION!");
+            this.cancel();
+        }else {
+            //DISCONNECTED
+            Log.d(MainActivity.TAG,"FUCK STILL NO CONNECTION");
+        }
+    }
+}
+
