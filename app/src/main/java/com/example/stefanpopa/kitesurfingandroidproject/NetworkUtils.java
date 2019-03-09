@@ -16,6 +16,9 @@ import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_mod
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Result;
 
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -157,10 +160,14 @@ public class NetworkUtils {
     }
 
     public static void sendNetworkSpotAllRequest(Spot_All_Body body, String baseUrl){
-        Retrofit retrofit = new Retrofit.Builder()
+        /*Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build();*/
+        Retrofit retrofit = NetworkUtils.createRetrofitClient(baseUrl,
+                60,
+                60,
+                60);
 
         KitesurfingAPI kitesurfingAPI = retrofit.create(KitesurfingAPI.class);
 
@@ -172,9 +179,8 @@ public class NetworkUtils {
                 Log.d(MainActivity.TAG,"onResponse: the call on the api-spot-get-all endpoint has been succesful");
                 Log.d(MainActivity.TAG,"onResponse: the code is: "+response.code());
                 NetworkUtils.displayResponseGetAllSpot(response);
-                if(response.code()==200){
+                if(response.isSuccessful()){
                     //generate RecyclerView
-
                     NetworkUtils.allListFetchListener.onSpotsListFetcher(response);
                 }
             }
@@ -301,4 +307,21 @@ public class NetworkUtils {
 
     }
 
+    private static Retrofit createRetrofitClient(String baseUrl,
+                                          int connectTimeout,
+                                          int readTimeout,
+                                          int writeTimeout){
+        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(connectTimeout, TimeUnit.SECONDS)
+                .readTimeout(readTimeout, TimeUnit.SECONDS)
+                .writeTimeout(writeTimeout, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
+                .build();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        return retrofit;
+    }
 }
