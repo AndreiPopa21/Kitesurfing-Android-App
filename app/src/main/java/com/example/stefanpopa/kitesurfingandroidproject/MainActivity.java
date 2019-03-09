@@ -49,6 +49,8 @@ implements NetworkUtils.SpotsListFetcher{
         spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
         listProgressBar=(ProgressBar)findViewById(R.id.list_progress_bar);
         NetworkUtils.allListFetchListener=this;
+
+        Log.d(MainActivity.TAG,"Check network connectivity: "+NetworkUtils.isNetworkAvailable(this));
         //Auth_Body auth = new Auth_Body(getString(R.string.valid_email));
         //Spot_All_Body spot = new Spot_All_Body(null,70);
         //Spot_Details_Body details = new Spot_Details_Body("bz1vaqsrgq");
