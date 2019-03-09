@@ -19,10 +19,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+implements NetworkUtils.SpotsListFetcher{
 
     public static final String TAG="MainActivity";
     //private static final String BASE_URL= "https://internship-2019.herokuapp.com";
+
+    private Response<Spot_All_Result> spotsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +42,19 @@ public class MainActivity extends AppCompatActivity {
         //NetworkUtils.sendNetworkAddFavorites(new Favorites_Add_Body("hfjlTbb4NC"),getString(R.string.base_url));
         //NetworkUtils.sendNetworkRemoveFavorites(new Favorites_Remove_Body("hfjlTbb4NC"),getString(R.string.base_url));
         //NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("",0),getString(R.string.base_url));
+        NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("",0),getString(R.string.base_url),this);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
     }
+
+    @Override
+    public void onSpotsListFetcher(Response<Spot_All_Result> list) {
+        this.spotsList=list;
+        //Log.d(MainActivity.TAG,"RADARADARAD A MERRRRS");
+        //NetworkUtils.displayResponseGetAllSpot(this.spotsList);
+    }
+
 }

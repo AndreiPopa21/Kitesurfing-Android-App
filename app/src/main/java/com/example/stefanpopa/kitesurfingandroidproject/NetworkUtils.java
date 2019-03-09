@@ -22,7 +22,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
 public class NetworkUtils {
+
+    public interface SpotsListFetcher{
+        void onSpotsListFetcher(Response<Spot_All_Result> list);
+    }
 
     public static void displayResponseGetAllSpot(Response<Spot_All_Result> response){
         switch(response.code()){
@@ -149,7 +154,7 @@ public class NetworkUtils {
         });
     }
 
-    public static void sendNetworkSpotAllRequest(Spot_All_Body body,String baseUrl,Context context){
+    public static void sendNetworkSpotAllRequest(Spot_All_Body body, String baseUrl, final SpotsListFetcher listListener){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -167,6 +172,7 @@ public class NetworkUtils {
                 NetworkUtils.displayResponseGetAllSpot(response);
                 if(response.code()==200){
                     //generate RecyclerView
+                    listListener.onSpotsListFetcher(response);
                 }
             }
 
