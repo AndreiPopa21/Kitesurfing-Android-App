@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_add_models.Favorites_Add_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_remove_models.Favorites_Remove_Body;
@@ -32,17 +34,20 @@ implements NetworkUtils.SpotsListFetcher{
     public static final String FETCHED_DATA_FOR_LIST_KEY="fetched_data_for_list";
 
     private Spot_All_Result spotsList;
+    private boolean alreadyCalledForList=false;
 
     private RecyclerView spotsRecyclerView;
+    private ProgressBar listProgressBar;
+
     private SpotsAdapter spotsAdapter;
 
-    private boolean alreadyCalledForList=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
+        listProgressBar=(ProgressBar)findViewById(R.id.list_progress_bar);
         NetworkUtils.allListFetchListener=this;
         //Auth_Body auth = new Auth_Body(getString(R.string.valid_email));
         //Spot_All_Body spot = new Spot_All_Body(null,70);
@@ -76,10 +81,15 @@ implements NetworkUtils.SpotsListFetcher{
         if(!alreadyCalledForList) {
             if(this.spotsList==null){
                 alreadyCalledForList=true;
-                Log.d(MainActivity.TAG,"A call for the list has been established");
-                NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("Morocco", 20), getString(R.string.base_url));
+                performAllSpotsRequest();
             }
         }
+    }
+
+    private void performAllSpotsRequest(){
+        Log.d(MainActivity.TAG,"A call for the list has been established");
+        listProgressBar.setVisibility(View.VISIBLE);
+        NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("Morocco", 20), getString(R.string.base_url));
     }
 
     @Override
@@ -92,6 +102,7 @@ implements NetworkUtils.SpotsListFetcher{
 
     @Override
     public void onSpotsListFetcher(Response<Spot_All_Result> list) {
+        listProgressBar.setVisibility(View.INVISIBLE);
         this.spotsList=list.body();
         this.alreadyCalledForList=false;
         createSpotsRecyclerView(this.spotsList);
