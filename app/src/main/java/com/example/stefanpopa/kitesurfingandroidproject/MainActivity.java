@@ -15,6 +15,8 @@ import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_mod
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_user_get_models.Auth_Result;
 
+import java.nio.charset.MalformedInputException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,11 +28,15 @@ implements NetworkUtils.SpotsListFetcher{
 
     public static final String TAG="MainActivity";
     //private static final String BASE_URL= "https://internship-2019.herokuapp.com";
+    public static final String ALREADY_CALLED_FOR_LIST_KEY="already_called_for_list";
+    public static final String FETCHED_DATA_FOR_LIST_KEY="fetched_data_for_list";
 
-    private Response<Spot_All_Result> spotsList;
+    private Spot_All_Result spotsList;
 
     private RecyclerView spotsRecyclerView;
     private SpotsAdapter spotsAdapter;
+
+    private boolean alreadyCalledForList=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,26 +54,55 @@ implements NetworkUtils.SpotsListFetcher{
         //NetworkUtils.sendNetworkAddFavorites(new Favorites_Add_Body("hfjlTbb4NC"),getString(R.string.base_url));
         //NetworkUtils.sendNetworkRemoveFavorites(new Favorites_Remove_Body("hfjlTbb4NC"),getString(R.string.base_url));
         //NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("",0),getString(R.string.base_url));
-        NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("Morocco",20),getString(R.string.base_url));
+
+        if(savedInstanceState==null){
+            Log.d(MainActivity.TAG,"THERE IS NOTHING IN THE SAVED INSTANCE!");
+        }else{
+            Log.d(MainActivity.TAG,"THERE IS SOMETHING IN THE SAVED INSTANCE!");
+            if(savedInstanceState.containsKey(ALREADY_CALLED_FOR_LIST_KEY)){
+                this.alreadyCalledForList=savedInstanceState.getBoolean(ALREADY_CALLED_FOR_LIST_KEY);
+            }else{
+                Log.d(MainActivity.TAG,"BOOLEAN ALREADY CALLED FOR THE LIST IS NOT IN THE SAVED INSTANCE");
+            }
+
+            if(savedInstanceState.containsKey(FETCHED_DATA_FOR_LIST_KEY)){
+                this.spotsList=(Spot_All_Result)savedInstanceState.getSerializable(FETCHED_DATA_FOR_LIST_KEY);
+                createSpotsRecyclerView(this.spotsList);
+            }else{
+                Log.d(MainActivity.TAG,"SERIALIZABLE SPOTS LIST IS NOT IN THE SAVED INSTANCE");
+            }
+        }
+
+        if(!alreadyCalledForList) {
+            if(this.spotsList==null){
+                alreadyCalledForList=true;
+                Log.d(MainActivity.TAG,"A call for the list has been established");
+                NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("Morocco", 20), getString(R.string.base_url));
+            }
+        }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putBoolean(ALREADY_CALLED_FOR_LIST_KEY,this.alreadyCalledForList);
+        outState.putSerializable(FETCHED_DATA_FOR_LIST_KEY,this.spotsList);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onSpotsListFetcher(Response<Spot_All_Result> list) {
-        this.spotsList=list;
-        createSpotsRecyclerView(list);
+        this.spotsList=list.body();
+        this.alreadyCalledForList=false;
+        createSpotsRecyclerView(this.spotsList);
         //Log.d(MainActivity.TAG,"RADARADARAD A MERRRRS");
         //NetworkUtils.displayResponseGetAllSpot(this.spotsList);
     }
 
-    private void createSpotsRecyclerView(Response<Spot_All_Result> list){
+    private void createSpotsRecyclerView(Spot_All_Result spotsList){
         spotsRecyclerView.setHasFixedSize(true);
         spotsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        spotsAdapter=new SpotsAdapter(this,list);
+        spotsAdapter=new SpotsAdapter(this,spotsList);
         spotsRecyclerView.setAdapter(spotsAdapter);
     }
 }

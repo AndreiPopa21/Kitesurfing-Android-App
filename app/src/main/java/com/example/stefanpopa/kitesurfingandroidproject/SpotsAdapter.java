@@ -15,12 +15,12 @@ import retrofit2.Response;
 
 public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHolder> {
 
-    private Response<Spot_All_Result> spotsResponse;
+    private Spot_All_Result spotsList;
     private Context context;
     private LayoutInflater mInflater;
 
-    public SpotsAdapter(Context context, Response<Spot_All_Result> spotsResponse) {
-        this.spotsResponse=spotsResponse;
+    public SpotsAdapter(Context context, Spot_All_Result spotsList) {
+        this.spotsList=spotsList;
         this.context=context;
         this.mInflater=LayoutInflater.from(context);
     }
@@ -35,7 +35,7 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
 
     @Override
     public void onBindViewHolder(@NonNull SpotsViewHolder spotsViewHolder, int i) {
-        Spot_All_Result_Children info = this.spotsResponse.body().getAll_result_children().get(i);
+        Spot_All_Result_Children info = this.spotsList.getAll_result_children().get(i);
         spotsViewHolder.setId(info.getId());
         spotsViewHolder.setName(info.getName());
         spotsViewHolder.setCountry(info.getCountry());
@@ -48,10 +48,10 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
 
     @Override
     public int getItemCount() {
-        if(spotsResponse==null){
+        if(spotsList==null){
             return 0;
         }else{
-            return spotsResponse.body().getAll_result_children().size();
+            return spotsList.getAll_result_children().size();
         }
     }
 

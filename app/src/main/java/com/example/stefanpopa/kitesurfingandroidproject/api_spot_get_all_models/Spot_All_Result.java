@@ -3,9 +3,10 @@ package com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Spot_All_Result {
+public class Spot_All_Result implements Serializable {
 
     @SerializedName("result")
     @Expose

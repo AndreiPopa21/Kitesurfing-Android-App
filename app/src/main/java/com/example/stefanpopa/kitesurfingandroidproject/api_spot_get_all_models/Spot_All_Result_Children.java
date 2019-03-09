@@ -3,7 +3,9 @@ package com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Spot_All_Result_Children {
+import java.io.Serializable;
+
+public class Spot_All_Result_Children implements Serializable {
 
     @SerializedName("id")
     @Expose
