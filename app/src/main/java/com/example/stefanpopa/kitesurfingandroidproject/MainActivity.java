@@ -3,6 +3,7 @@ package com.example.stefanpopa.kitesurfingandroidproject;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_add_models.Favorites_Add_Body;
@@ -27,11 +28,12 @@ implements NetworkUtils.SpotsListFetcher{
 
     private Response<Spot_All_Result> spotsList;
 
+    private RecyclerView spotsRecyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
         //Auth_Body auth = new Auth_Body(getString(R.string.valid_email));
         //Spot_All_Body spot = new Spot_All_Body(null,70);
         //Spot_Details_Body details = new Spot_Details_Body("bz1vaqsrgq");
@@ -57,4 +59,7 @@ implements NetworkUtils.SpotsListFetcher{
         //NetworkUtils.displayResponseGetAllSpot(this.spotsList);
     }
 
+    private void createSpotsRecyclerView(Response<Spot_All_Result> list){
+
+    }
 }
