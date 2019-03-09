@@ -115,7 +115,7 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
 
         public SpotsViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTextView=(TextView)itemView.findViewById(R.id.region_text_view);
+            nameTextView=(TextView)itemView.findViewById(R.id.name_text_view);
             countryTextView=(TextView)itemView.findViewById(R.id.country_text_view);
         }
     }

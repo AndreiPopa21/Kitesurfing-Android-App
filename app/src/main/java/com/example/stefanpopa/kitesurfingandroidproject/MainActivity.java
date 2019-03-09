@@ -3,6 +3,7 @@ package com.example.stefanpopa.kitesurfingandroidproject;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
@@ -29,6 +30,8 @@ implements NetworkUtils.SpotsListFetcher{
     private Response<Spot_All_Result> spotsList;
 
     private RecyclerView spotsRecyclerView;
+    private SpotsAdapter spotsAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +58,15 @@ implements NetworkUtils.SpotsListFetcher{
     @Override
     public void onSpotsListFetcher(Response<Spot_All_Result> list) {
         this.spotsList=list;
+        createSpotsRecyclerView(list);
         //Log.d(MainActivity.TAG,"RADARADARAD A MERRRRS");
         //NetworkUtils.displayResponseGetAllSpot(this.spotsList);
     }
 
     private void createSpotsRecyclerView(Response<Spot_All_Result> list){
-
+        spotsRecyclerView.setHasFixedSize(true);
+        spotsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        spotsAdapter=new SpotsAdapter(this,list);
+        spotsRecyclerView.setAdapter(spotsAdapter);
     }
 }
