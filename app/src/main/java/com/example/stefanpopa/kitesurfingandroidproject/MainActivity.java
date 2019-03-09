@@ -37,6 +37,7 @@ implements NetworkUtils.SpotsListFetcher{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
+        NetworkUtils.allListFetchListener=this;
         //Auth_Body auth = new Auth_Body(getString(R.string.valid_email));
         //Spot_All_Body spot = new Spot_All_Body(null,70);
         //Spot_Details_Body details = new Spot_Details_Body("bz1vaqsrgq");
@@ -47,7 +48,7 @@ implements NetworkUtils.SpotsListFetcher{
         //NetworkUtils.sendNetworkAddFavorites(new Favorites_Add_Body("hfjlTbb4NC"),getString(R.string.base_url));
         //NetworkUtils.sendNetworkRemoveFavorites(new Favorites_Remove_Body("hfjlTbb4NC"),getString(R.string.base_url));
         //NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("",0),getString(R.string.base_url));
-        NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("",0),getString(R.string.base_url),this);
+        NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("Morocco",20),getString(R.string.base_url));
     }
 
     @Override

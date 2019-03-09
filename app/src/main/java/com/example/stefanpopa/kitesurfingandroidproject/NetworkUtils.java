@@ -29,6 +29,8 @@ public class NetworkUtils {
         void onSpotsListFetcher(Response<Spot_All_Result> list);
     }
 
+    public static SpotsListFetcher allListFetchListener;
+
     public static void displayResponseGetAllSpot(Response<Spot_All_Result> response){
         switch(response.code()){
             case 200:
@@ -154,7 +156,7 @@ public class NetworkUtils {
         });
     }
 
-    public static void sendNetworkSpotAllRequest(Spot_All_Body body, String baseUrl, final SpotsListFetcher listListener){
+    public static void sendNetworkSpotAllRequest(Spot_All_Body body, String baseUrl){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -172,7 +174,8 @@ public class NetworkUtils {
                 NetworkUtils.displayResponseGetAllSpot(response);
                 if(response.code()==200){
                     //generate RecyclerView
-                    listListener.onSpotsListFetcher(response);
+
+                    NetworkUtils.allListFetchListener.onSpotsListFetcher(response);
                 }
             }
 
