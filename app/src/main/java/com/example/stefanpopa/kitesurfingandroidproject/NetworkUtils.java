@@ -35,6 +35,10 @@ public class NetworkUtils {
         void onSpotsListFetcher(Response<Spot_All_Result> list);
     }
 
+    public interface ReceiveInternetConnection{
+        void onReceivedInternetConnection(boolean status);
+    }
+
     public static SpotsListFetcher allListFetchListener;
 
     public static void displayResponseGetAllSpot(Response<Spot_All_Result> response){
@@ -338,18 +342,37 @@ public class NetworkUtils {
 
 class CheckConnection extends TimerTask {
     private Context context;
-    public CheckConnection(Context context){
+    private int triesBeforeTimeout;
+    private int currentTry;
+    NetworkUtils.ReceiveInternetConnection listener;
+    public CheckConnection(Context context, int triesBeforeTimeout, NetworkUtils.ReceiveInternetConnection listener){
         this.context = context;
+        this.triesBeforeTimeout=triesBeforeTimeout;
+        this.listener=listener;
+        this.currentTry=0;
     }
     public void run() {
         if(NetworkUtils.isNetworkAvailable(context)){
             //CONNECTED
             Log.d(MainActivity.TAG,"HOT CHEESE WE HAVE THE CONneCTION!");
             this.cancel();
+            //this.cancel();
+            //listener.onReceivedInternetConnection(true);
         }else {
             //DISCONNECTED
-            Log.d(MainActivity.TAG,"FUCK STILL NO CONNECTION");
+            currentTry++;
+            if(currentTry>=triesBeforeTimeout){
+                Log.d(MainActivity.TAG,"Unsuccesful connection!Try again later");
+                this.cancel();
+                //listener.onReceivedInternetConnection(false);
+            }else{
+                Log.d(MainActivity.TAG,"FUCK STILL NO CONNECTION, STILL "+ (triesBeforeTimeout-currentTry)+" TRIES");
+            }
+
         }
+    }
+    public void exit(){
+
     }
 }
 

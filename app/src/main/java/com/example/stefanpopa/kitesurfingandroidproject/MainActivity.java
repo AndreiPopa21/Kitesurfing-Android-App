@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_add_models.Favorites_Add_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_remove_models.Favorites_Remove_Body;
@@ -27,7 +29,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
-implements NetworkUtils.SpotsListFetcher{
+implements NetworkUtils.SpotsListFetcher,NetworkUtils.ReceiveInternetConnection{
 
     public static final String TAG="MainActivity";
     //private static final String BASE_URL= "https://internship-2019.herokuapp.com";
@@ -39,6 +41,7 @@ implements NetworkUtils.SpotsListFetcher{
 
     private RecyclerView spotsRecyclerView;
     private ProgressBar listProgressBar;
+    private TextView noConnectionTextView;
 
     private SpotsAdapter spotsAdapter;
 
@@ -49,10 +52,12 @@ implements NetworkUtils.SpotsListFetcher{
         setContentView(R.layout.activity_main);
         spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
         listProgressBar=(ProgressBar)findViewById(R.id.list_progress_bar);
+        noConnectionTextView=(TextView)findViewById(R.id.no_connection_text_view);
+
         NetworkUtils.allListFetchListener=this;
 
         Log.d(MainActivity.TAG,"Check network connectivity: "+NetworkUtils.isNetworkAvailable(this));
-        checkNetworkEverySeconds(5000);
+        //checkNetworkEverySeconds(5000);
         //Auth_Body auth = new Auth_Body(getString(R.string.valid_email));
         //Spot_All_Body spot = new Spot_All_Body(null,70);
         //Spot_Details_Body details = new Spot_Details_Body("bz1vaqsrgq");
@@ -84,8 +89,14 @@ implements NetworkUtils.SpotsListFetcher{
 
         if(!alreadyCalledForList) {
             if(this.spotsList==null){
-                alreadyCalledForList=true;
-                performAllSpotsRequest();
+                if(NetworkUtils.isNetworkAvailable(this)){
+                    alreadyCalledForList=true;
+                    //checkNetworkEverySeconds(5000);
+                    performAllSpotsRequest();
+                }else{
+                    noConnectionTextView.setVisibility(View.VISIBLE);
+                    listProgressBar.setVisibility(View.INVISIBLE);
+                }
             }
         }
     }
@@ -95,13 +106,13 @@ implements NetworkUtils.SpotsListFetcher{
         listProgressBar.setVisibility(View.VISIBLE);
         NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("Morocco", 20), getString(R.string.base_url));
     }
-
+   /*
     private void checkNetworkEverySeconds(int miliseconds){
         Timer timer = new Timer();
-        final int MILLISECONDS = miliseconds; //5 seconds
-        timer.schedule(new CheckConnection(this), 0, MILLISECONDS);
+        final int MILLISECONDS = miliseconds;
+        timer.schedule(new CheckConnection(this,3,this), 0, MILLISECONDS);
 
-    }
+    }*/
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -126,5 +137,14 @@ implements NetworkUtils.SpotsListFetcher{
         spotsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         spotsAdapter=new SpotsAdapter(this,spotsList);
         spotsRecyclerView.setAdapter(spotsAdapter);
+    }
+
+    @Override
+    public void onReceivedInternetConnection(boolean status) {
+        if(status){
+            //we have internet connection
+        }else{
+           // Toast.makeText(getParent().getBaseContext(),"No Internet",Toast.LENGTH_SHORT).show();
+        }
     }
 }
