@@ -35,6 +35,8 @@ implements NetworkUtils.SpotsListFetcher,NetworkUtils.ReceiveInternetConnection{
     //private static final String BASE_URL= "https://internship-2019.herokuapp.com";
     public static final String ALREADY_CALLED_FOR_LIST_KEY="already_called_for_list";
     public static final String FETCHED_DATA_FOR_LIST_KEY="fetched_data_for_list";
+    public static final String IS_NO_CONNECTION_TEXT_VIEW_VISIBLE="is_no_connection_text_view_visible";
+    public static final String IS_LIST_PROGRESS_BAR_VISIBLE="is_list_progress_bar_visible";
 
     private Spot_All_Result spotsList;
     private boolean alreadyCalledForList=false;
@@ -85,6 +87,24 @@ implements NetworkUtils.SpotsListFetcher,NetworkUtils.ReceiveInternetConnection{
             }else{
                 Log.d(MainActivity.TAG,"SERIALIZABLE SPOTS LIST IS NOT IN THE SAVED INSTANCE");
             }
+
+            if(savedInstanceState.containsKey(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE)){
+                boolean visible = savedInstanceState.getBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE);
+                if(visible){
+                    noConnectionTextView.setVisibility(View.VISIBLE);
+                }else{
+                    noConnectionTextView.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            if(savedInstanceState.containsKey(IS_LIST_PROGRESS_BAR_VISIBLE)){
+                boolean visible = savedInstanceState.getBoolean(IS_LIST_PROGRESS_BAR_VISIBLE);
+                if(visible){
+                    listProgressBar.setVisibility(View.VISIBLE);
+                }else{
+                    listProgressBar.setVisibility(View.INVISIBLE);
+                }
+            }
         }
 
         if(!alreadyCalledForList) {
@@ -119,6 +139,17 @@ implements NetworkUtils.SpotsListFetcher,NetworkUtils.ReceiveInternetConnection{
 
         outState.putBoolean(ALREADY_CALLED_FOR_LIST_KEY,this.alreadyCalledForList);
         outState.putSerializable(FETCHED_DATA_FOR_LIST_KEY,this.spotsList);
+        if(listProgressBar.getVisibility()==View.VISIBLE){
+            outState.putBoolean(IS_LIST_PROGRESS_BAR_VISIBLE,true);
+        }else{
+            outState.putBoolean(IS_LIST_PROGRESS_BAR_VISIBLE,false);
+        }
+
+        if(noConnectionTextView.getVisibility()==View.VISIBLE){
+            outState.putBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE,true);
+        }else{
+            outState.putBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE,false);
+        }
         super.onSaveInstanceState(outState);
     }
 
