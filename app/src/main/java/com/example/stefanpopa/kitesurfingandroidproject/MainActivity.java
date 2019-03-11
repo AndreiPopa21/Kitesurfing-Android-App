@@ -36,7 +36,7 @@ implements NetworkUtils.SpotsListFetcher,
 
     public static final String TAG="MainActivity";
     //private static final String BASE_URL= "https://internship-2019.herokuapp.com";
-    public static final String ALREADY_CALLED_FOR_LIST_KEY="already_called_for_list";
+        public static final String ALREADY_CALLED_FOR_LIST_KEY="already_called_for_list";
     public static final String FETCHED_DATA_FOR_LIST_KEY="fetched_data_for_list";
     public static final String IS_NO_CONNECTION_TEXT_VIEW_VISIBLE="is_no_connection_text_view_visible";
     public static final String IS_LIST_PROGRESS_BAR_VISIBLE="is_list_progress_bar_visible";
@@ -129,6 +129,7 @@ implements NetworkUtils.SpotsListFetcher,
     private void performAllSpotsRequest(){
         Log.d(MainActivity.TAG,"A call for the list has been established");
         listProgressBar.setVisibility(View.VISIBLE);
+        noConnectionTextView.setVisibility(View.INVISIBLE);
         NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("Morocco", 20), getString(R.string.base_url));
     }
    /*
@@ -161,6 +162,7 @@ implements NetworkUtils.SpotsListFetcher,
     @Override
     public void onSpotsListFetcher(Response<Spot_All_Result> list) {
         listProgressBar.setVisibility(View.INVISIBLE);
+        noConnectionTextView.setVisibility(View.INVISIBLE);
         this.spotsList=list.body();
         this.alreadyCalledForList=false;
         createSpotsRecyclerView(this.spotsList);

@@ -35,11 +35,16 @@ public class NetworkUtils {
         void onSpotsListFetcher(Response<Spot_All_Result> list);
     }
 
+    public interface SpotDetailFetcher{
+        void onSpotDetailFetcher(SpotDetails spotDetails);
+    }
+
     public interface ReceiveInternetConnection{
         void onReceivedInternetConnection(boolean status);
     }
 
     public static SpotsListFetcher allListFetchListener;
+    public static SpotDetailFetcher spotDetailFetchListener;
 
     public static void displayResponseGetAllSpot(Response<Spot_All_Result> response){
         switch(response.code()){
@@ -142,10 +147,9 @@ public class NetworkUtils {
     }
 
     public static void sendNetworkSpotDetailsRequest(Spot_Details_Body body,String baseUrl){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+
+        Retrofit retrofit = NetworkUtils.createRetrofitClient(baseUrl,
+                60,60,60);
 
         KitesurfingAPI kitesurfingAPI = retrofit.create(KitesurfingAPI.class);
 
@@ -156,6 +160,10 @@ public class NetworkUtils {
             public void onResponse(Call<Spot_Details_Result> call, Response<Spot_Details_Result> response) {
                 Log.d(MainActivity.TAG,"onResponse: The call on api-spot-get-details endpoint has been succesful");
                 NetworkUtils.displayResponseGetSpotDetails(response);
+                if(response.isSuccessful()){
+                    SpotDetails spotDetails = parseResponseToSpotDetails(response);
+                    NetworkUtils.spotDetailFetchListener.onSpotDetailFetcher(spotDetails);
+                }
             }
 
             @Override
@@ -337,6 +345,31 @@ public class NetworkUtils {
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static SpotDetails parseResponseToSpotDetails(Response <Spot_Details_Result> response){
+        if(response.isSuccessful()){
+            String id = response.body().getDetails_result_children().getId();
+            String name =response.body().getDetails_result_children().getName();
+            double longitude = response.body().getDetails_result_children().getLongitude();
+            double latitude = response.body().getDetails_result_children().getLatitude();
+            int windProbability = response.body().getDetails_result_children().getWindProbability();
+            String country = response.body().getDetails_result_children().getCountry();
+            String whenToGo = response.body().getDetails_result_children().getWhenToGo();
+            boolean isFavorite = response.body().getDetails_result_children().isFavorite();
+            SpotDetails spotDetails = new SpotDetails(
+                    id,
+                    name,
+                    longitude,
+                    latitude,
+                    windProbability,
+                    country,
+                    whenToGo,
+                    isFavorite);
+            return spotDetails;
+        }else{
+            return null;
+        }
     }
 }
 

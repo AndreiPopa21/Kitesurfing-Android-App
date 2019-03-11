@@ -8,24 +8,43 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class DetailActivity extends AppCompatActivity {
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_models.Spot_Details_Body;
+
+import java.io.Serializable;
+
+public class DetailActivity extends AppCompatActivity
+implements NetworkUtils.SpotDetailFetcher {
 
     public static final String DETAIL_TAG="DetailActivity";
     public static final String IS_DETAIL_NO_CONNECTION_TEXT_VIEW_VISIBLE="is_detail_no_connection_text_view_visible";
     public static final String IS_DETAIL_PROGRESS_BAR_VISIBLE="is_detail_progress_bar_visible";
     public static final String DETAIL_ON_SAVED_INSTANCE="detail_on_saved_instance";
+    public static final String SPOT_DETAILS_OBJECT="spot_details_object";
+    public static final String ALREADY_CALLED_FOR_DETAILS_KEY="already_called_for_list";
+    public static final String SPOT_DETAIL_ID="spot_detail_id";
+    public static final String SPOT_DETAIL_LOCATION="spot_detail_location";
+
 
     private ProgressBar detailProgressBar;
     private TextView detailNoConnectionTextView;
 
     //boolean that tells us whether a configuration change took place
     private boolean detailOnSavedInstance=false;
+    private boolean alreadyCalledForDetails=false;
+
+    private String spotId;
+    private String spotLocation;
+
+    private SpotDetails spotDetails=null;//object that holds all details about our spot
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_activity);
+
+        NetworkUtils.spotDetailFetchListener=this;
 
         bindViews();
 
@@ -37,8 +56,22 @@ public class DetailActivity extends AppCompatActivity {
             if(!checkIntentContent(intentThatStartedActivity)){
                 closeOnError("The extras do not follow the specified format");
             }
+            spotDetails=null;
         }else {
             checkViewsVisibility(savedInstanceState);
+            checkSavedInstanceBundleContent(savedInstanceState);
+        }
+        Log.d(DetailActivity.DETAIL_TAG,"SpotId is: "+this.spotId+"| Location is: "+this.spotLocation);
+
+        if(!alreadyCalledForDetails){
+            if(spotDetails==null){
+                if(NetworkUtils.isNetworkAvailable(this)){
+                    alreadyCalledForDetails=true;
+                    performSpotDetailRequest(spotId);
+                }
+            }else{
+                Log.d(DetailActivity.DETAIL_TAG,"Another call is not necessary, details have already been received");
+            }
         }
     }
 
@@ -52,13 +85,39 @@ public class DetailActivity extends AppCompatActivity {
         if(extras==null){
             return false;
         }
-        String location = extras.getString(MainActivity.SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY);
-        String ceva =extras.getString("MANCAMI-A");
-        String spotId= extras.getString(MainActivity.SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY);
-        if(location==null || spotId==null){
+        spotLocation = extras.getString(MainActivity.SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY);
+        spotId= extras.getString(MainActivity.SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY);
+        if(spotLocation==null || spotId==null){
             return false;
         }
         return true;
+    }
+
+    private void checkSavedInstanceBundleContent(Bundle savedInstanceState){
+        if(savedInstanceState.containsKey(ALREADY_CALLED_FOR_DETAILS_KEY)){
+            alreadyCalledForDetails=savedInstanceState.getBoolean(ALREADY_CALLED_FOR_DETAILS_KEY);
+        }else{
+            alreadyCalledForDetails=false;
+        }
+        if(savedInstanceState.containsKey(SPOT_DETAILS_OBJECT)){
+            spotDetails=(SpotDetails)savedInstanceState.getSerializable(SPOT_DETAILS_OBJECT);
+        }else{
+            spotDetails=null;
+        }
+
+        if(savedInstanceState.containsKey(SPOT_DETAIL_ID)){
+            spotId=savedInstanceState.getString(SPOT_DETAIL_ID);
+        }else{
+            spotId=null;
+            closeOnError("There is a problem getting the spotId");
+        }
+
+        if(savedInstanceState.containsKey(SPOT_DETAIL_LOCATION)){
+            spotLocation=savedInstanceState.getString(SPOT_DETAIL_LOCATION);
+        }else{
+            spotLocation=null;
+            closeOnError("There is a problem getting the spotLocation");
+        }
     }
 
     private void bindViews(){
@@ -83,6 +142,17 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void performSpotDetailRequest(String spotId){
+        if(spotId==null){
+            return;
+        }
+        Log.d(DetailActivity.DETAIL_TAG,"A call for details for ID: "+spotId+" has been established");
+        detailProgressBar.setVisibility(View.VISIBLE);
+        detailNoConnectionTextView.setVisibility(View.INVISIBLE);
+        NetworkUtils.sendNetworkSpotDetailsRequest(new Spot_Details_Body(spotId),getString(R.string.base_url));
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         detailOnSavedInstance=true;
@@ -100,100 +170,32 @@ public class DetailActivity extends AppCompatActivity {
             outState.putBoolean(IS_DETAIL_NO_CONNECTION_TEXT_VIEW_VISIBLE,false);
         }
 
+        outState.putBoolean(ALREADY_CALLED_FOR_DETAILS_KEY,alreadyCalledForDetails);
+
+        outState.putSerializable(SPOT_DETAILS_OBJECT,spotDetails);
+
+        outState.putString(SPOT_DETAIL_ID,spotId);
+
+        outState.putString(SPOT_DETAIL_LOCATION,spotLocation);
+
         super.onSaveInstanceState(outState);
     }
 
-    public class SpotDetails{
-
-        public String spotId;
-        public String name;
-        private double longitude;
-        private double latitude;
-        private int windProbability;
-        private String country;
-        private String whenToGo;
-        private boolean isFavorite;
-
-        public SpotDetails(String spotId,
-                           String name,
-                           double longitude,
-                           double latitude,
-                           int windProbability,
-                           String country,
-                           String whenToGo,
-                           boolean isFavorite) {
-            this.spotId = spotId;
-            this.name = name;
-            this.longitude = longitude;
-            this.latitude = latitude;
-            this.windProbability = windProbability;
-            this.country = country;
-            this.whenToGo = whenToGo;
-            this.isFavorite = isFavorite;
-        }
-
-        public String getSpotId() {
-            return spotId;
-        }
-
-        public void setSpotId(String spotId) {
-            this.spotId = spotId;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public double getLongitude() {
-            return longitude;
-        }
-
-        public void setLongitude(double longitude) {
-            this.longitude = longitude;
-        }
-
-        public double getLatitude() {
-            return latitude;
-        }
-
-        public void setLatitude(double latitude) {
-            this.latitude = latitude;
-        }
-
-        public int getWindProbability() {
-            return windProbability;
-        }
-
-        public void setWindProbability(int windProbability) {
-            this.windProbability = windProbability;
-        }
-
-        public String getCountry() {
-            return country;
-        }
-
-        public void setCountry(String country) {
-            this.country = country;
-        }
-
-        public String getWhenToGo() {
-            return whenToGo;
-        }
-
-        public void setWhenToGo(String whenToGo) {
-            this.whenToGo = whenToGo;
-        }
-
-        public boolean isFavorite() {
-            return isFavorite;
-        }
-
-        public void setFavorite(boolean favorite) {
-            isFavorite = favorite;
+    @Override
+    public void onSpotDetailFetcher(SpotDetails spotDetails) {
+        this.alreadyCalledForDetails=false;
+        this.spotDetails=spotDetails;
+        if(spotDetails!=null){
+            detailProgressBar.setVisibility(View.INVISIBLE);
+            detailNoConnectionTextView.setVisibility(View.INVISIBLE);
+            //Log.d(DetailActivity.DETAIL_TAG,"Details have been succesfully received");
+            Toast.makeText(this,"Details have been succesfully received",Toast.LENGTH_SHORT).show();
+        }else{
+            detailProgressBar.setVisibility(View.INVISIBLE);
+            detailNoConnectionTextView.setVisibility(View.INVISIBLE);
+            Toast.makeText(this,"Details have not been succesfully received",Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }
