@@ -29,7 +29,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
-implements NetworkUtils.SpotsListFetcher,NetworkUtils.ReceiveInternetConnection{
+implements NetworkUtils.SpotsListFetcher,
+           NetworkUtils.ReceiveInternetConnection,
+           SpotsAdapter.SpotItemClickListener{
 
     public static final String TAG="MainActivity";
     //private static final String BASE_URL= "https://internship-2019.herokuapp.com";
@@ -166,7 +168,7 @@ implements NetworkUtils.SpotsListFetcher,NetworkUtils.ReceiveInternetConnection{
     private void createSpotsRecyclerView(Spot_All_Result spotsList){
         spotsRecyclerView.setHasFixedSize(true);
         spotsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        spotsAdapter=new SpotsAdapter(this,spotsList);
+        spotsAdapter=new SpotsAdapter(this,spotsList,this);
         spotsRecyclerView.setAdapter(spotsAdapter);
     }
 
@@ -177,5 +179,10 @@ implements NetworkUtils.SpotsListFetcher,NetworkUtils.ReceiveInternetConnection{
         }else{
            // Toast.makeText(getParent().getBaseContext(),"No Internet",Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onSpotClick(String spotId) {
+        Toast.makeText(this,spotId,Toast.LENGTH_SHORT).show();
     }
 }

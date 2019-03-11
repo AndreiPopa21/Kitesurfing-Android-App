@@ -15,14 +15,23 @@ import retrofit2.Response;
 
 public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHolder> {
 
+    public interface SpotItemClickListener{
+        void onSpotClick(String spotId);
+    }
+
+
     private Spot_All_Result spotsList;
     private Context context;
     private LayoutInflater mInflater;
+    private SpotItemClickListener spotItemClickListener;
 
-    public SpotsAdapter(Context context, Spot_All_Result spotsList) {
+    public SpotsAdapter(Context context,
+                        Spot_All_Result spotsList,
+                        SpotItemClickListener spotItemClickListener) {
         this.spotsList=spotsList;
         this.context=context;
         this.mInflater=LayoutInflater.from(context);
+        this.spotItemClickListener=spotItemClickListener;
     }
 
     @NonNull
@@ -117,6 +126,12 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
             super(itemView);
             nameTextView=(TextView)itemView.findViewById(R.id.name_text_view);
             countryTextView=(TextView)itemView.findViewById(R.id.country_text_view);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    spotItemClickListener.onSpotClick(getId());
+                }
+            });
         }
     }
 }
