@@ -16,7 +16,7 @@ import retrofit2.Response;
 public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHolder> {
 
     public interface SpotItemClickListener{
-        void onSpotClick(String spotId);
+        void onSpotClick(String spotId,String location);
     }
 
 
@@ -129,7 +129,7 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    spotItemClickListener.onSpotClick(getId());
+                    spotItemClickListener.onSpotClick(getId(),getName());
                 }
             });
         }

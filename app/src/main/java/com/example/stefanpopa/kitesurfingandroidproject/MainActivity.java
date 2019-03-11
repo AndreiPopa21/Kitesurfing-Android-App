@@ -40,6 +40,8 @@ implements NetworkUtils.SpotsListFetcher,
     public static final String FETCHED_DATA_FOR_LIST_KEY="fetched_data_for_list";
     public static final String IS_NO_CONNECTION_TEXT_VIEW_VISIBLE="is_no_connection_text_view_visible";
     public static final String IS_LIST_PROGRESS_BAR_VISIBLE="is_list_progress_bar_visible";
+    public static final String SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY="spot_id_key";
+    public static final String SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY="spot_location_key";
 
     private Spot_All_Result spotsList;
     private boolean alreadyCalledForList=false;
@@ -183,9 +185,15 @@ implements NetworkUtils.SpotsListFetcher,
     }
 
     @Override
-    public void onSpotClick(String spotId) {
+    public void onSpotClick(String spotId,String location) {
         //Toast.makeText(this,spotId,Toast.LENGTH_SHORT).show();
+        if(spotId==null || location==null){
+            Toast.makeText(this,"Error checking the details",Toast.LENGTH_SHORT).show();
+            return;
+        }
         Intent detailActivityStartIntent = new Intent(this,DetailActivity.class);
+        detailActivityStartIntent.putExtra(SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY,spotId);
+        detailActivityStartIntent.putExtra(SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY,location);
         startActivity(detailActivityStartIntent);
     }
 }
