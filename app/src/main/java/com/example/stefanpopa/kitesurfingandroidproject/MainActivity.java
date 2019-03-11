@@ -1,5 +1,6 @@
 package com.example.stefanpopa.kitesurfingandroidproject;
 
+import android.content.Intent;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -183,6 +184,8 @@ implements NetworkUtils.SpotsListFetcher,
 
     @Override
     public void onSpotClick(String spotId) {
-        Toast.makeText(this,spotId,Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,spotId,Toast.LENGTH_SHORT).show();
+        Intent detailActivityStartIntent = new Intent(this,DetailActivity.class);
+        startActivity(detailActivityStartIntent);
     }
 }
