@@ -2,12 +2,14 @@ package com.example.stefanpopa.kitesurfingandroidproject;
 
 import android.content.Intent;
 import android.os.PersistableBundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +51,7 @@ implements NetworkUtils.SpotsListFetcher,
     private RecyclerView spotsRecyclerView;
     private ProgressBar listProgressBar;
     private TextView noConnectionTextView;
+    private Button mainRefreshButton;
 
     private SpotsAdapter spotsAdapter;
 
@@ -60,7 +63,7 @@ implements NetworkUtils.SpotsListFetcher,
         spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
         listProgressBar=(ProgressBar)findViewById(R.id.list_progress_bar);
         noConnectionTextView=(TextView)findViewById(R.id.no_connection_text_view);
-
+        customizeActionBar();
         NetworkUtils.allListFetchListener=this;
 
         Log.d(MainActivity.TAG,"Check network connectivity: "+NetworkUtils.isNetworkAvailable(this));
@@ -117,7 +120,7 @@ implements NetworkUtils.SpotsListFetcher,
                 if(NetworkUtils.isNetworkAvailable(this)){
                     alreadyCalledForList=true;
                     //checkNetworkEverySeconds(5000);
-                    performAllSpotsRequest();
+                    performAllSpotsRequest("",0);
                 }else{
                     noConnectionTextView.setVisibility(View.VISIBLE);
                     listProgressBar.setVisibility(View.INVISIBLE);
@@ -126,11 +129,12 @@ implements NetworkUtils.SpotsListFetcher,
         }
     }
 
-    private void performAllSpotsRequest(){
+    private void performAllSpotsRequest(String country, int windProbability){
         Log.d(MainActivity.TAG,"A call for the list has been established");
         listProgressBar.setVisibility(View.VISIBLE);
         noConnectionTextView.setVisibility(View.INVISIBLE);
-        NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("", 0), getString(R.string.base_url));
+        NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body(country, windProbability),
+                                                getString(R.string.base_url));
     }
    /*
     private void checkNetworkEverySeconds(int miliseconds){
@@ -139,6 +143,36 @@ implements NetworkUtils.SpotsListFetcher,
         timer.schedule(new CheckConnection(this,3,this), 0, MILLISECONDS);
 
     }*/
+
+    private void customizeActionBar(){
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.main_custom_action_bar_layout);
+        View view =getSupportActionBar().getCustomView();
+        mainRefreshButton=(Button)view.findViewById(R.id.main_refresh_button);
+        mainRefreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(MainActivity.TAG,"Pressed Refresh button");
+                if(NetworkUtils.isNetworkAvailable(getApplicationContext())){
+                    alreadyCalledForList=true;
+                    spotsList=null;
+                    setViewsInvisible();
+                    performAllSpotsRequest("Sri Lanka",0);
+                }else{
+                    Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+    }
+
+    private void setViewsInvisible(){
+        listProgressBar.setVisibility(View.INVISIBLE);
+        noConnectionTextView.setVisibility(View.INVISIBLE);
+        spotsRecyclerView.setAdapter(null);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
