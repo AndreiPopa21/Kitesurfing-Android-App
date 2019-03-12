@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_models.Spot_Details_Body;
 
+import org.w3c.dom.Text;
+
 import java.io.Serializable;
 
 public class DetailActivity extends AppCompatActivity
@@ -27,14 +29,22 @@ implements NetworkUtils.SpotDetailsFetcher {
     public static final String SPOT_DETAIL_ID="spot_detail_id";
     public static final String SPOT_DETAIL_LOCATION="spot_detail_location";
 
+    private ProgressBar detailProgressBar;
+    private TextView detailNoConnectionTextView;
 
     private LinearLayout nameLinearLayout;
     private LinearLayout countryLinearLayout;
-    private View nameCountryBorder;
-    private ProgressBar detailProgressBar;
-    private TextView detailNoConnectionTextView;
+    private LinearLayout windProbabilityLinearLayout;
+    private LinearLayout whenToGoLineaLayout;
+    private LinearLayout longitudeLinearLayout;
+    private LinearLayout latitudeLinearLayout;
+
     private TextView nameTextView;
     private TextView countryTextView;
+    private TextView windProbabilityTextView;
+    private TextView whenToGoTextView;
+    private TextView longitudeTextView;
+    private TextView latitudeTextView;
 
 
     //boolean that tells us whether a configuration change took place
@@ -90,7 +100,18 @@ implements NetworkUtils.SpotDetailsFetcher {
 
         countryLinearLayout.setVisibility(View.VISIBLE);
         countryTextView.setText(spotDetails.getCountry());
-        nameCountryBorder.setVisibility(View.VISIBLE);
+
+        windProbabilityLinearLayout.setVisibility(View.VISIBLE);
+        windProbabilityTextView.setText(String.valueOf(spotDetails.getWindProbability()));
+
+        whenToGoLineaLayout.setVisibility(View.VISIBLE);
+        whenToGoTextView.setText(spotDetails.getWhenToGo());
+
+        latitudeLinearLayout.setVisibility(View.VISIBLE);
+        latitudeTextView.setText(String.valueOf(spotDetails.getLatitude()));
+
+        longitudeLinearLayout.setVisibility(View.VISIBLE);
+        longitudeTextView.setText(String.valueOf(spotDetails.getLongitude()));
     }
 
     private void closeOnError(String errorMessage){
@@ -146,12 +167,25 @@ implements NetworkUtils.SpotDetailsFetcher {
 
         nameLinearLayout=(LinearLayout)findViewById(R.id.detail_name_linear_layout);
         countryLinearLayout=(LinearLayout)findViewById(R.id.detail_country_linear_layout);
+        windProbabilityLinearLayout=(LinearLayout)findViewById(R.id.detail_wind_probability_linear_layout);
+        whenToGoLineaLayout=(LinearLayout)findViewById(R.id.detail_when_to_go_linear_layout);
+        latitudeLinearLayout = (LinearLayout)findViewById(R.id.detail_latitude_linear_layout);
+        longitudeLinearLayout=(LinearLayout)findViewById(R.id.detail_longitude_linear_layout);
+
         nameLinearLayout.setVisibility(View.INVISIBLE);
         countryLinearLayout.setVisibility(View.INVISIBLE);
+        windProbabilityLinearLayout.setVisibility(View.INVISIBLE);
+        whenToGoLineaLayout.setVisibility(View.INVISIBLE);
+        latitudeLinearLayout.setVisibility(View.INVISIBLE);
+        longitudeLinearLayout.setVisibility(View.INVISIBLE);
+
         nameTextView=(TextView)findViewById(R.id.name_text_view);
         countryTextView=(TextView)findViewById(R.id.country_text_view);
-        nameCountryBorder=(View)findViewById(R.id.name_country_border);
-        nameCountryBorder.setVisibility(View.INVISIBLE);
+        windProbabilityTextView=(TextView)findViewById(R.id.wind_probability_text_view);
+        whenToGoTextView=(TextView)findViewById(R.id.when_to_go_text_view);
+        longitudeTextView=(TextView)findViewById(R.id.longitude_text_view);
+        latitudeTextView=(TextView)findViewById(R.id.latitude_text_view);
+
     }
 
     private void checkViewsVisibility(Bundle savedInstanceState){
