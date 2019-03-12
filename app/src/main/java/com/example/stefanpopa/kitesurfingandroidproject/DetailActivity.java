@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -50,6 +51,9 @@ implements NetworkUtils.SpotDetailsFetcher {
 
     private Button viewLocationButton;
 
+    private TextView actionBarNameTextView;
+    private Button detailRefreshButton;
+
     //boolean that tells us whether a configuration change took place
     private boolean detailOnSavedInstance=false;
     private boolean alreadyCalledForDetails=false;
@@ -82,7 +86,8 @@ implements NetworkUtils.SpotDetailsFetcher {
             checkSavedInstanceBundleContent(savedInstanceState);
         }
         Log.d(DetailActivity.DETAIL_TAG,"SpotId is: "+this.spotId+"| Location is: "+this.spotLocation);
-        setTitle(this.spotLocation);
+       // setTitle(this.spotLocation);
+        customizeActionBar();
 
         if(!alreadyCalledForDetails){
             if(spotDetails==null){
@@ -95,6 +100,30 @@ implements NetworkUtils.SpotDetailsFetcher {
                 populateLayout(this.spotDetails);
             }
         }
+    }
+
+    private void customizeActionBar(){
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.custom_action_bar_layout);
+        View view =getSupportActionBar().getCustomView();
+        actionBarNameTextView=(TextView)view.findViewById(R.id.action_bar_spot_name_text_view);
+        actionBarNameTextView.setText(spotLocation);
+        detailRefreshButton=(Button)view.findViewById(R.id.detail_refresh_button);
+        detailRefreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(DetailActivity.DETAIL_TAG,"Pressed Refresh button");
+                if(NetworkUtils.isNetworkAvailable(getApplicationContext())){
+                    alreadyCalledForDetails=true;
+                    spotDetails=null;
+                    setViewsInvisible();
+                    performSpotDetailRequest(spotId);
+                }else{
+                    Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void populateLayout(final SpotDetails spotDetails){
@@ -131,6 +160,22 @@ implements NetworkUtils.SpotDetailsFetcher {
                 }
             }
         });
+    }
+
+    private void setViewsInvisible(){
+
+        detailProgressBar.setVisibility(View.INVISIBLE);
+        detailNoConnectionTextView.setVisibility(View.INVISIBLE);
+
+        nameLinearLayout.setVisibility(View.INVISIBLE);
+        countryLinearLayout.setVisibility(View.INVISIBLE);
+        windProbabilityLinearLayout.setVisibility(View.INVISIBLE);
+        whenToGoLineaLayout.setVisibility(View.INVISIBLE);
+        latitudeLinearLayout.setVisibility(View.INVISIBLE);
+        longitudeLinearLayout.setVisibility(View.INVISIBLE);
+
+        viewLocationButton.setVisibility(View.INVISIBLE);
+        viewLocationButton.setEnabled(false);
     }
 
     private void closeOnError(String errorMessage){
@@ -181,8 +226,6 @@ implements NetworkUtils.SpotDetailsFetcher {
     private void bindViews(){
         detailProgressBar=(ProgressBar)findViewById(R.id.detail_progress_bar);
         detailNoConnectionTextView=(TextView)findViewById(R.id.detail_no_connection_text_view);
-        detailProgressBar.setVisibility(View.INVISIBLE);
-        detailNoConnectionTextView.setVisibility(View.INVISIBLE);
 
         nameLinearLayout=(LinearLayout)findViewById(R.id.detail_name_linear_layout);
         countryLinearLayout=(LinearLayout)findViewById(R.id.detail_country_linear_layout);
@@ -190,13 +233,6 @@ implements NetworkUtils.SpotDetailsFetcher {
         whenToGoLineaLayout=(LinearLayout)findViewById(R.id.detail_when_to_go_linear_layout);
         latitudeLinearLayout = (LinearLayout)findViewById(R.id.detail_latitude_linear_layout);
         longitudeLinearLayout=(LinearLayout)findViewById(R.id.detail_longitude_linear_layout);
-
-        nameLinearLayout.setVisibility(View.INVISIBLE);
-        countryLinearLayout.setVisibility(View.INVISIBLE);
-        windProbabilityLinearLayout.setVisibility(View.INVISIBLE);
-        whenToGoLineaLayout.setVisibility(View.INVISIBLE);
-        latitudeLinearLayout.setVisibility(View.INVISIBLE);
-        longitudeLinearLayout.setVisibility(View.INVISIBLE);
 
         nameTextView=(TextView)findViewById(R.id.name_text_view);
         countryTextView=(TextView)findViewById(R.id.country_text_view);
@@ -206,9 +242,8 @@ implements NetworkUtils.SpotDetailsFetcher {
         latitudeTextView=(TextView)findViewById(R.id.latitude_text_view);
 
         viewLocationButton=(Button)findViewById(R.id.view_location_button);
-        viewLocationButton.setVisibility(View.INVISIBLE);
-        viewLocationButton.setEnabled(false);
 
+        setViewsInvisible();
     }
 
     private void checkViewsVisibility(Bundle savedInstanceState){
