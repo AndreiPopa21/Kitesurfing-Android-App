@@ -18,14 +18,14 @@
             <TextView
                 android:text="Name: "
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/name_text_view"
                 android:textSize="@dimen/detail_value_text_size"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
@@ -42,14 +42,14 @@
             <TextView
                 android:text="Country: "
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/country_text_view"
                 android:textSize="@dimen/detail_value_text_size"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
@@ -67,14 +67,14 @@
             <TextView
                 android:text="Wind Probability: "
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/wind_probability_text_view"
                 android:textSize="@dimen/detail_value_text_size"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
@@ -92,14 +92,14 @@
             <TextView
                 android:text="When to go: "
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/when_to_go_text_view"
                 android:textSize="@dimen/detail_value_text_size"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
@@ -117,14 +117,14 @@
             <TextView
                 android:text="Longitude: "
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/longitude_text_view"
                 android:textSize="@dimen/detail_value_text_size"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
@@ -142,14 +142,14 @@
             <TextView
                 android:text="Latitude: "
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/latitude_text_view"
                 android:textSize="@dimen/detail_value_text_size"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"

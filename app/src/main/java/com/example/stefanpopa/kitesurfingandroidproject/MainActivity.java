@@ -2,6 +2,7 @@ package com.example.stefanpopa.kitesurfingandroidproject;
 
 import android.content.Intent;
 import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,12 +39,14 @@ implements NetworkUtils.SpotsListFetcher,
 
     public static final String TAG="MainActivity";
     //private static final String BASE_URL= "https://internship-2019.herokuapp.com";
-        public static final String ALREADY_CALLED_FOR_LIST_KEY="already_called_for_list";
+    public static final String ALREADY_CALLED_FOR_LIST_KEY="already_called_for_list";
     public static final String FETCHED_DATA_FOR_LIST_KEY="fetched_data_for_list";
     public static final String IS_NO_CONNECTION_TEXT_VIEW_VISIBLE="is_no_connection_text_view_visible";
     public static final String IS_LIST_PROGRESS_BAR_VISIBLE="is_list_progress_bar_visible";
     public static final String SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY="spot_id_key";
     public static final String SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY="spot_location_key";
+
+    public static final int FILTER_ACTIVITY_RESULT_CODE=100;
 
     private Spot_All_Result spotsList;
     private boolean alreadyCalledForList=false;
@@ -126,7 +129,8 @@ implements NetworkUtils.SpotsListFetcher,
     }
 
     private void openFilterActivity(){
-
+        Intent intent = new Intent(this,FilterActivity.class);
+        startActivityForResult(intent,FILTER_ACTIVITY_RESULT_CODE);
     }
 
     private void checkSavedInstanceBundleContent(Bundle savedInstanceState){
@@ -272,5 +276,10 @@ implements NetworkUtils.SpotsListFetcher,
     protected void onDestroy() {
         super.onDestroy();
         Log.d(MainActivity.TAG,"Entered onDestroy()");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

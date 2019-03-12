@@ -14,6 +14,7 @@ public class FilterActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.filter_activity);
+        setTitle("Filter");
         Intent intentThatStartedActivity = getIntent();
         if(intentThatStartedActivity==null){
             closeOnError("Null intent started the activity");

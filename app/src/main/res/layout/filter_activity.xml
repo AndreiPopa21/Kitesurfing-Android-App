@@ -3,5 +3,55 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="5dp"
+            android:textSize="@dimen/detail_title_value_text_size"
+            android:text="@string/filter_country_edit_text_title"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:hint="@string/filter_country_edit_text_hint"
+            android:id="@+id/filter_country_edit_text"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"/>
+        <TextView
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="5dp"
+            android:textSize="@dimen/detail_title_value_text_size"
+            android:text="@string/filter_wind_probability_edit_text_title"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:hint="@string/filter_wind_probability_edit_text_hint"
+            android:id="@+id/filter_wind_probability_edit_text"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/filter_apply_button"
+                android:text="@string/filter_apply_button_text"
+                android:textSize="@dimen/detail_title_value_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
 
+    </LinearLayout>
+ 
 </android.support.constraint.ConstraintLayout>
