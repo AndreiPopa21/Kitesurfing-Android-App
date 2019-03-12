@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +16,7 @@ import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_mod
 import java.io.Serializable;
 
 public class DetailActivity extends AppCompatActivity
-implements NetworkUtils.SpotDetailFetcher {
+implements NetworkUtils.SpotDetailsFetcher {
 
     public static final String DETAIL_TAG="DetailActivity";
     public static final String IS_DETAIL_NO_CONNECTION_TEXT_VIEW_VISIBLE="is_detail_no_connection_text_view_visible";
@@ -27,8 +28,14 @@ implements NetworkUtils.SpotDetailFetcher {
     public static final String SPOT_DETAIL_LOCATION="spot_detail_location";
 
 
+    private LinearLayout nameLinearLayout;
+    private LinearLayout countryLinearLayout;
+    private View nameCountryBorder;
     private ProgressBar detailProgressBar;
     private TextView detailNoConnectionTextView;
+    private TextView nameTextView;
+    private TextView countryTextView;
+
 
     //boolean that tells us whether a configuration change took place
     private boolean detailOnSavedInstance=false;
@@ -44,7 +51,7 @@ implements NetworkUtils.SpotDetailFetcher {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_activity);
 
-        NetworkUtils.spotDetailFetchListener=this;
+        NetworkUtils.spotDetailsFetchListener=this;
 
         bindViews();
 
@@ -62,6 +69,7 @@ implements NetworkUtils.SpotDetailFetcher {
             checkSavedInstanceBundleContent(savedInstanceState);
         }
         Log.d(DetailActivity.DETAIL_TAG,"SpotId is: "+this.spotId+"| Location is: "+this.spotLocation);
+        setTitle(this.spotLocation);
 
         if(!alreadyCalledForDetails){
             if(spotDetails==null){
@@ -71,8 +79,18 @@ implements NetworkUtils.SpotDetailFetcher {
                 }
             }else{
                 Log.d(DetailActivity.DETAIL_TAG,"Another call is not necessary, details have already been received");
+                populateLayout(this.spotDetails);
             }
         }
+    }
+
+    private void populateLayout(SpotDetails spotDetails){
+        nameLinearLayout.setVisibility(View.VISIBLE);
+        nameTextView.setText(spotDetails.getName());
+
+        countryLinearLayout.setVisibility(View.VISIBLE);
+        countryTextView.setText(spotDetails.getCountry());
+        nameCountryBorder.setVisibility(View.VISIBLE);
     }
 
     private void closeOnError(String errorMessage){
@@ -125,6 +143,15 @@ implements NetworkUtils.SpotDetailFetcher {
         detailNoConnectionTextView=(TextView)findViewById(R.id.detail_no_connection_text_view);
         detailProgressBar.setVisibility(View.INVISIBLE);
         detailNoConnectionTextView.setVisibility(View.INVISIBLE);
+
+        nameLinearLayout=(LinearLayout)findViewById(R.id.detail_name_linear_layout);
+        countryLinearLayout=(LinearLayout)findViewById(R.id.detail_country_linear_layout);
+        nameLinearLayout.setVisibility(View.INVISIBLE);
+        countryLinearLayout.setVisibility(View.INVISIBLE);
+        nameTextView=(TextView)findViewById(R.id.name_text_view);
+        countryTextView=(TextView)findViewById(R.id.country_text_view);
+        nameCountryBorder=(View)findViewById(R.id.name_country_border);
+        nameCountryBorder.setVisibility(View.INVISIBLE);
     }
 
     private void checkViewsVisibility(Bundle savedInstanceState){
@@ -182,7 +209,7 @@ implements NetworkUtils.SpotDetailFetcher {
     }
 
     @Override
-    public void onSpotDetailFetcher(SpotDetails spotDetails) {
+    public void onSpotDetailsFetcher(SpotDetails spotDetails) {
         this.alreadyCalledForDetails=false;
         this.spotDetails=spotDetails;
         if(spotDetails!=null){
@@ -190,12 +217,12 @@ implements NetworkUtils.SpotDetailFetcher {
             detailNoConnectionTextView.setVisibility(View.INVISIBLE);
             //Log.d(DetailActivity.DETAIL_TAG,"Details have been succesfully received");
             Toast.makeText(this,"Details have been succesfully received",Toast.LENGTH_SHORT).show();
+            populateLayout(spotDetails);
         }else{
             detailProgressBar.setVisibility(View.INVISIBLE);
             detailNoConnectionTextView.setVisibility(View.INVISIBLE);
             Toast.makeText(this,"Details have not been succesfully received",Toast.LENGTH_SHORT).show();
         }
     }
-
 
 }

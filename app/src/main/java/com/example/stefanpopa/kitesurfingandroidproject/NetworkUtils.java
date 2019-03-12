@@ -35,8 +35,8 @@ public class NetworkUtils {
         void onSpotsListFetcher(Response<Spot_All_Result> list);
     }
 
-    public interface SpotDetailFetcher{
-        void onSpotDetailFetcher(SpotDetails spotDetails);
+    public interface SpotDetailsFetcher{
+        void onSpotDetailsFetcher(SpotDetails spotDetails);
     }
 
     public interface ReceiveInternetConnection{
@@ -44,7 +44,7 @@ public class NetworkUtils {
     }
 
     public static SpotsListFetcher allListFetchListener;
-    public static SpotDetailFetcher spotDetailFetchListener;
+    public static SpotDetailsFetcher spotDetailsFetchListener;
 
     public static void displayResponseGetAllSpot(Response<Spot_All_Result> response){
         switch(response.code()){
@@ -162,7 +162,7 @@ public class NetworkUtils {
                 NetworkUtils.displayResponseGetSpotDetails(response);
                 if(response.isSuccessful()){
                     SpotDetails spotDetails = parseResponseToSpotDetails(response);
-                    NetworkUtils.spotDetailFetchListener.onSpotDetailFetcher(spotDetails);
+                    NetworkUtils.spotDetailsFetchListener.onSpotDetailsFetcher(spotDetails);
                 }
             }
 
