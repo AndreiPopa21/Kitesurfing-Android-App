@@ -52,6 +52,7 @@ implements NetworkUtils.SpotsListFetcher,
     private ProgressBar listProgressBar;
     private TextView noConnectionTextView;
     private Button mainRefreshButton;
+    private Button filterButton;
 
     private SpotsAdapter spotsAdapter;
 
@@ -60,7 +61,7 @@ implements NetworkUtils.SpotsListFetcher,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         bindViews();
         customizeActionBar();
         NetworkUtils.allListFetchListener=this;
@@ -93,6 +94,18 @@ implements NetworkUtils.SpotsListFetcher,
         spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
         listProgressBar=(ProgressBar)findViewById(R.id.list_progress_bar);
         noConnectionTextView=(TextView)findViewById(R.id.no_connection_text_view);
+        filterButton=(Button)findViewById(R.id.filter_button);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFilterActivity();
+            }
+        });
+
+    }
+
+    private void openFilterActivity(){
+
     }
 
     private void checkSavedInstanceBundleContent(Bundle savedInstanceState){
@@ -232,5 +245,4 @@ implements NetworkUtils.SpotsListFetcher,
         timer.schedule(new CheckConnection(this,3,this), 0, MILLISECONDS);
 
     }*/
-
 }
