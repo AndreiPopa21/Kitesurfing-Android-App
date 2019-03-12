@@ -94,6 +94,9 @@ implements NetworkUtils.SpotDetailsFetcher {
                 if(NetworkUtils.isNetworkAvailable(this)){
                     alreadyCalledForDetails=true;
                     performSpotDetailRequest(spotId);
+                }else{
+                    detailNoConnectionTextView.setVisibility(View.VISIBLE);
+                    detailProgressBar.setVisibility(View.INVISIBLE);
                 }
             }else{
                 Log.d(DetailActivity.DETAIL_TAG,"Another call is not necessary, details have already been received");
@@ -316,5 +319,4 @@ implements NetworkUtils.SpotDetailsFetcher {
             Toast.makeText(this,"Details have not been succesfully received",Toast.LENGTH_SHORT).show();
         }
     }
-
 }
