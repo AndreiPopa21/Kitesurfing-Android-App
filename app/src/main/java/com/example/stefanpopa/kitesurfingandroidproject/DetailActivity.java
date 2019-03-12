@@ -1,11 +1,13 @@
 package com.example.stefanpopa.kitesurfingandroidproject;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ implements NetworkUtils.SpotDetailsFetcher {
     private TextView longitudeTextView;
     private TextView latitudeTextView;
 
+    private Button viewLocationButton;
 
     //boolean that tells us whether a configuration change took place
     private boolean detailOnSavedInstance=false;
@@ -94,7 +97,7 @@ implements NetworkUtils.SpotDetailsFetcher {
         }
     }
 
-    private void populateLayout(SpotDetails spotDetails){
+    private void populateLayout(final SpotDetails spotDetails){
         nameLinearLayout.setVisibility(View.VISIBLE);
         nameTextView.setText(spotDetails.getName());
 
@@ -112,6 +115,22 @@ implements NetworkUtils.SpotDetailsFetcher {
 
         longitudeLinearLayout.setVisibility(View.VISIBLE);
         longitudeTextView.setText(String.valueOf(spotDetails.getLongitude()));
+
+        viewLocationButton.setEnabled(true);
+        viewLocationButton.setVisibility(View.VISIBLE);
+        viewLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String uri_location = "geo:"
+                        +String.valueOf(spotDetails.getLatitude())
+                        +","+String.valueOf(spotDetails.getLongitude());
+                Uri gmmIntentUri = Uri.parse(uri_location);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW,gmmIntentUri);
+                if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(mapIntent);
+                }
+            }
+        });
     }
 
     private void closeOnError(String errorMessage){
@@ -185,6 +204,10 @@ implements NetworkUtils.SpotDetailsFetcher {
         whenToGoTextView=(TextView)findViewById(R.id.when_to_go_text_view);
         longitudeTextView=(TextView)findViewById(R.id.longitude_text_view);
         latitudeTextView=(TextView)findViewById(R.id.latitude_text_view);
+
+        viewLocationButton=(Button)findViewById(R.id.view_location_button);
+        viewLocationButton.setVisibility(View.INVISIBLE);
+        viewLocationButton.setEnabled(false);
 
     }
 

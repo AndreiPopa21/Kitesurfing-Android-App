@@ -130,7 +130,7 @@ implements NetworkUtils.SpotsListFetcher,
         Log.d(MainActivity.TAG,"A call for the list has been established");
         listProgressBar.setVisibility(View.VISIBLE);
         noConnectionTextView.setVisibility(View.INVISIBLE);
-        NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("Morocco", 20), getString(R.string.base_url));
+        NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("", 0), getString(R.string.base_url));
     }
    /*
     private void checkNetworkEverySeconds(int miliseconds){
