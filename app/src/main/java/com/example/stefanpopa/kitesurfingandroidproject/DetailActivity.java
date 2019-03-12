@@ -182,8 +182,8 @@ implements NetworkUtils.SpotDetailsFetcher {
     }
 
     private void closeOnError(String errorMessage){
-        finish();
         Log.d(DetailActivity.DETAIL_TAG,"Error: "+errorMessage);
+        finish();
     }
 
     private boolean checkIntentContent(Intent intent){

@@ -89,11 +89,27 @@ implements NetworkUtils.SpotsListFetcher,
             }
         }
     }
+    private void customizeActionBar(){
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.main_custom_action_bar_layout);
+        View view =getSupportActionBar().getCustomView();
+        mainRefreshButton=(Button)view.findViewById(R.id.main_refresh_button);
+        mainRefreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(MainActivity.TAG,"Pressed Refresh button");
+                if(NetworkUtils.isNetworkAvailable(getApplicationContext())){
+                    alreadyCalledForList=true;
+                    spotsList=null;
+                    setViewsInvisible();
+                    performAllSpotsRequest("Sri Lanka",0);
+                }else{
+                    Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
+                }
 
-    private void bindViews(){
-        spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
-        listProgressBar=(ProgressBar)findViewById(R.id.list_progress_bar);
-        noConnectionTextView=(TextView)findViewById(R.id.no_connection_text_view);
+            }
+        });
         filterButton=(Button)findViewById(R.id.filter_button);
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +117,12 @@ implements NetworkUtils.SpotsListFetcher,
                 openFilterActivity();
             }
         });
+    }
 
+    private void bindViews(){
+        spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
+        listProgressBar=(ProgressBar)findViewById(R.id.list_progress_bar);
+        noConnectionTextView=(TextView)findViewById(R.id.no_connection_text_view);
     }
 
     private void openFilterActivity(){
@@ -149,29 +170,6 @@ implements NetworkUtils.SpotsListFetcher,
                                                 getString(R.string.base_url));
     }
 
-    private void customizeActionBar(){
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.main_custom_action_bar_layout);
-        View view =getSupportActionBar().getCustomView();
-        mainRefreshButton=(Button)view.findViewById(R.id.main_refresh_button);
-        mainRefreshButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(MainActivity.TAG,"Pressed Refresh button");
-                if(NetworkUtils.isNetworkAvailable(getApplicationContext())){
-                    alreadyCalledForList=true;
-                    spotsList=null;
-                    setViewsInvisible();
-                    performAllSpotsRequest("Sri Lanka",0);
-                }else{
-                    Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
-
-    }
 
     private void setViewsInvisible(){
         listProgressBar.setVisibility(View.INVISIBLE);
@@ -245,4 +243,34 @@ implements NetworkUtils.SpotsListFetcher,
         timer.schedule(new CheckConnection(this,3,this), 0, MILLISECONDS);
 
     }*/
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(MainActivity.TAG,"Entered onStart()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(MainActivity.TAG,"Entered onResume()");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(MainActivity.TAG,"Entered onPause()");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(MainActivity.TAG,"Entered onStop()");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(MainActivity.TAG,"Entered onDestroy()");
+    }
 }
