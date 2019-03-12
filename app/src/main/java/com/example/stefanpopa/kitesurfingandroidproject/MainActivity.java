@@ -60,59 +60,19 @@ implements NetworkUtils.SpotsListFetcher,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
-        listProgressBar=(ProgressBar)findViewById(R.id.list_progress_bar);
-        noConnectionTextView=(TextView)findViewById(R.id.no_connection_text_view);
+        
+        bindViews();
         customizeActionBar();
         NetworkUtils.allListFetchListener=this;
 
         Log.d(MainActivity.TAG,"Check network connectivity: "+NetworkUtils.isNetworkAvailable(this));
         //checkNetworkEverySeconds(5000);
-        //Auth_Body auth = new Auth_Body(getString(R.string.valid_email));
-        //Spot_All_Body spot = new Spot_All_Body(null,70);
-        //Spot_Details_Body details = new Spot_Details_Body("bz1vaqsrgq");
-        //NetworkUtils.sendNetworkSpotDetailsRequest(details,getString(R.string.base_url));
-       // NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body(null,0),getString(R.string.base_url));
-       // sendNetworkAuthRequest(spot);
-        //NetworkUtils.sendNetworkGetAllCountries(getString(R.string.base_url));
-        //NetworkUtils.sendNetworkAddFavorites(new Favorites_Add_Body("hfjlTbb4NC"),getString(R.string.base_url));
-        //NetworkUtils.sendNetworkRemoveFavorites(new Favorites_Remove_Body("hfjlTbb4NC"),getString(R.string.base_url));
-        //NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body("",0),getString(R.string.base_url));
 
         if(savedInstanceState==null){
             Log.d(MainActivity.TAG,"THERE IS NOTHING IN THE SAVED INSTANCE!");
         }else{
             Log.d(MainActivity.TAG,"THERE IS SOMETHING IN THE SAVED INSTANCE!");
-            if(savedInstanceState.containsKey(ALREADY_CALLED_FOR_LIST_KEY)){
-                this.alreadyCalledForList=savedInstanceState.getBoolean(ALREADY_CALLED_FOR_LIST_KEY);
-            }else{
-                Log.d(MainActivity.TAG,"BOOLEAN ALREADY CALLED FOR THE LIST IS NOT IN THE SAVED INSTANCE");
-            }
-
-            if(savedInstanceState.containsKey(FETCHED_DATA_FOR_LIST_KEY)){
-                this.spotsList=(Spot_All_Result)savedInstanceState.getSerializable(FETCHED_DATA_FOR_LIST_KEY);
-                createSpotsRecyclerView(this.spotsList);
-            }else{
-                Log.d(MainActivity.TAG,"SERIALIZABLE SPOTS LIST IS NOT IN THE SAVED INSTANCE");
-            }
-
-            if(savedInstanceState.containsKey(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE)){
-                boolean visible = savedInstanceState.getBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE);
-                if(visible){
-                    noConnectionTextView.setVisibility(View.VISIBLE);
-                }else{
-                    noConnectionTextView.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            if(savedInstanceState.containsKey(IS_LIST_PROGRESS_BAR_VISIBLE)){
-                boolean visible = savedInstanceState.getBoolean(IS_LIST_PROGRESS_BAR_VISIBLE);
-                if(visible){
-                    listProgressBar.setVisibility(View.VISIBLE);
-                }else{
-                    listProgressBar.setVisibility(View.INVISIBLE);
-                }
-            }
+            checkSavedInstanceBundleContent(savedInstanceState);
         }
 
         if(!alreadyCalledForList) {
@@ -129,6 +89,45 @@ implements NetworkUtils.SpotsListFetcher,
         }
     }
 
+    private void bindViews(){
+        spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
+        listProgressBar=(ProgressBar)findViewById(R.id.list_progress_bar);
+        noConnectionTextView=(TextView)findViewById(R.id.no_connection_text_view);
+    }
+
+    private void checkSavedInstanceBundleContent(Bundle savedInstanceState){
+        if(savedInstanceState.containsKey(ALREADY_CALLED_FOR_LIST_KEY)){
+            this.alreadyCalledForList=savedInstanceState.getBoolean(ALREADY_CALLED_FOR_LIST_KEY);
+        }else{
+            Log.d(MainActivity.TAG,"BOOLEAN ALREADY CALLED FOR THE LIST IS NOT IN THE SAVED INSTANCE");
+        }
+
+        if(savedInstanceState.containsKey(FETCHED_DATA_FOR_LIST_KEY)){
+            this.spotsList=(Spot_All_Result)savedInstanceState.getSerializable(FETCHED_DATA_FOR_LIST_KEY);
+            createSpotsRecyclerView(this.spotsList);
+        }else{
+            Log.d(MainActivity.TAG,"SERIALIZABLE SPOTS LIST IS NOT IN THE SAVED INSTANCE");
+        }
+
+        if(savedInstanceState.containsKey(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE)){
+            boolean visible = savedInstanceState.getBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE);
+            if(visible){
+                noConnectionTextView.setVisibility(View.VISIBLE);
+            }else{
+                noConnectionTextView.setVisibility(View.INVISIBLE);
+            }
+        }
+
+        if(savedInstanceState.containsKey(IS_LIST_PROGRESS_BAR_VISIBLE)){
+            boolean visible = savedInstanceState.getBoolean(IS_LIST_PROGRESS_BAR_VISIBLE);
+            if(visible){
+                listProgressBar.setVisibility(View.VISIBLE);
+            }else{
+                listProgressBar.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
     private void performAllSpotsRequest(String country, int windProbability){
         Log.d(MainActivity.TAG,"A call for the list has been established");
         listProgressBar.setVisibility(View.VISIBLE);
@@ -136,13 +135,6 @@ implements NetworkUtils.SpotsListFetcher,
         NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body(country, windProbability),
                                                 getString(R.string.base_url));
     }
-   /*
-    private void checkNetworkEverySeconds(int miliseconds){
-        Timer timer = new Timer();
-        final int MILLISECONDS = miliseconds;
-        timer.schedule(new CheckConnection(this,3,this), 0, MILLISECONDS);
-
-    }*/
 
     private void customizeActionBar(){
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -232,4 +224,13 @@ implements NetworkUtils.SpotsListFetcher,
         detailActivityStartIntent.putExtra(SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY,location);
         startActivity(detailActivityStartIntent);
     }
+
+      /*
+    private void checkNetworkEverySeconds(int miliseconds){
+        Timer timer = new Timer();
+        final int MILLISECONDS = miliseconds;
+        timer.schedule(new CheckConnection(this,3,this), 0, MILLISECONDS);
+
+    }*/
+
 }
