@@ -60,6 +60,8 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
         spotsViewHolder.setWhenToGo(info.getWhenToGo());
         spotsViewHolder.setFavorite(info.isFavorite());
 
+        spotsViewHolder.setIndex_in_list(i);
+
         spotsViewHolder.getNameTextView().setText(info.getName());
         spotsViewHolder.getCountryTextView().setText(info.getCountry());
         if(info.isFavorite()){
@@ -102,6 +104,16 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
         private String country;
         private String whenToGo;
         private boolean isFavorite;
+
+        private int index_in_list;
+
+        public int getIndex_in_list() {
+            return index_in_list;
+        }
+
+        public void setIndex_in_list(int index_in_list) {
+            this.index_in_list = index_in_list;
+        }
 
         public String getId() {
             return id;

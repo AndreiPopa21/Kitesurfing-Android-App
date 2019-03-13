@@ -39,12 +39,21 @@ public class NetworkUtils {
         void onSpotDetailsFetcher(SpotDetails spotDetails);
     }
 
+    public interface SpotChangeFavoriteState{
+        void onSpotChangeFavoriteState(int result, SpotsAdapter.SpotsViewHolder itemView);
+    }
+
     public interface ReceiveInternetConnection{
         void onReceivedInternetConnection(boolean status);
     }
 
     public static SpotsListFetcher allListFetchListener;
     public static SpotDetailsFetcher spotDetailsFetchListener;
+    public static SpotChangeFavoriteState spotChangeFavoriteStateListener;
+
+    public static final int RESULT_ADDED_FAVORITE= -2312;
+    public static final int RESULT_REMOVED_FAVORITE = -212144;
+    public static final int RESULT_ERROR_CHANGE_STATE = -77777;
 
     public static void displayResponseGetAllSpot(Response<Spot_All_Result> response){
         switch(response.code()){
@@ -257,16 +266,16 @@ public class NetworkUtils {
         });
     }
 
-    public static void sendNetworkAddFavorites(Favorites_Add_Body body,String baseUrl,boolean isFavorited){
-        if(isFavorited){
+    public static void sendNetworkAddFavorites(Favorites_Add_Body body,
+                                               String baseUrl,
+                                               final SpotsAdapter.SpotsViewHolder itemView){
+        /*if(isFavorited){
             Log.d(MainActivity.TAG,"Item with spotId: "+body.getSpotId()+" has already been favorited");
             return;
-        }
+        }*/
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        Retrofit retrofit = createRetrofitClient(baseUrl,
+                60,60,60);
 
         KitesurfingAPI kitesurfingAPI = retrofit.create(KitesurfingAPI.class);
 
@@ -279,26 +288,37 @@ public class NetworkUtils {
                 //displayResponseAddFavorites(response);
                 Log.d(MainActivity.TAG,"onResponse: code is: "+response.code());
                 displayResponseAddFavorites(response);
+
+                if(response.isSuccessful()){
+                    NetworkUtils.spotChangeFavoriteStateListener.
+                            onSpotChangeFavoriteState(RESULT_ADDED_FAVORITE,itemView);
+                }else{
+                    NetworkUtils.spotChangeFavoriteStateListener.
+                            onSpotChangeFavoriteState(RESULT_ERROR_CHANGE_STATE,itemView);
+
+                }
             }
 
             @Override
             public void onFailure(Call<Favorites_Add_Result> call, Throwable t) {
                 Log.d(MainActivity.TAG,"onFailure: Something went wrong with the server");
                 Log.d(MainActivity.TAG,t.toString());
+                NetworkUtils.spotChangeFavoriteStateListener.
+                        onSpotChangeFavoriteState(RESULT_ERROR_CHANGE_STATE,itemView);
             }
         });
 
     }
 
-    public static void sendNetworkRemoveFavorites(Favorites_Remove_Body body, String baseUrl,boolean isRemoved){
-        if(isRemoved){
+    public static void sendNetworkRemoveFavorites(Favorites_Remove_Body body,
+                                                  String baseUrl,
+                                                  final SpotsAdapter.SpotsViewHolder itemView){
+        /*if(isRemoved){
             Log.d(MainActivity.TAG,"Item with spotId: "+body.getSpotId()+" has already been removed");
             return;
-        }
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        }*/
+        Retrofit retrofit = createRetrofitClient(baseUrl,
+                60,60,60);
 
         KitesurfingAPI kitesurfingAPI = retrofit.create(KitesurfingAPI.class);
 
@@ -311,12 +331,21 @@ public class NetworkUtils {
                 //displayResponseAddFavorites(response);
                 Log.d(MainActivity.TAG,"onResponse: code is: "+response.code());
                 displayResponseRemoveFavorites(response);
+                if(response.isSuccessful()){
+                    NetworkUtils.spotChangeFavoriteStateListener.
+                            onSpotChangeFavoriteState(RESULT_REMOVED_FAVORITE,itemView);
+                }else{
+                    NetworkUtils.spotChangeFavoriteStateListener.
+                            onSpotChangeFavoriteState(RESULT_ERROR_CHANGE_STATE,itemView);
+                }
             }
 
             @Override
             public void onFailure(Call<Favorites_Remove_Result> call, Throwable t) {
                 Log.d(MainActivity.TAG,"onFailure: Something went wrong with the server");
                 Log.d(MainActivity.TAG,t.toString());
+                NetworkUtils.spotChangeFavoriteStateListener.
+                        onSpotChangeFavoriteState(RESULT_ERROR_CHANGE_STATE,itemView);
             }
         });
 

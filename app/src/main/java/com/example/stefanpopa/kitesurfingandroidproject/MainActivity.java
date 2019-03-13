@@ -37,11 +37,13 @@ public class MainActivity extends AppCompatActivity
 implements NetworkUtils.SpotsListFetcher,
            NetworkUtils.ReceiveInternetConnection,
            SpotsAdapter.SpotItemClickListener,
-           SpotsAdapter.FavoriteStarClickListener {
+           SpotsAdapter.FavoriteStarClickListener,
+            NetworkUtils.SpotChangeFavoriteState{
 
     public static final String TAG="MainActivity";
     //private static final String BASE_URL= "https://internship-2019.herokuapp.com";
     public static final String ALREADY_CALLED_FOR_LIST_KEY="already_called_for_list";
+    public static final String ALREADY_CALLED_FOR_FAVORITE_CHANGE="already_called_for_favorite_change";
     public static final String FETCHED_DATA_FOR_LIST_KEY="fetched_data_for_list";
     public static final String IS_NO_CONNECTION_TEXT_VIEW_VISIBLE="is_no_connection_text_view_visible";
     public static final String IS_LIST_PROGRESS_BAR_VISIBLE="is_list_progress_bar_visible";
@@ -52,6 +54,7 @@ implements NetworkUtils.SpotsListFetcher,
 
     private Spot_All_Result spotsList;
     private boolean alreadyCalledForList=false;
+    private boolean alreadyCalledForFavoriteChange=false;
 
     private RecyclerView spotsRecyclerView;
     private ProgressBar listProgressBar;
@@ -72,6 +75,7 @@ implements NetworkUtils.SpotsListFetcher,
         bindViews();
         customizeActionBar();
         NetworkUtils.allListFetchListener=this;
+        NetworkUtils.spotChangeFavoriteStateListener=this;
 
         Log.d(MainActivity.TAG,"Check network connectivity: "+NetworkUtils.isNetworkAvailable(this));
         //checkNetworkEverySeconds(5000);
@@ -141,6 +145,12 @@ implements NetworkUtils.SpotsListFetcher,
             Log.d(MainActivity.TAG,"BOOLEAN ALREADY CALLED FOR THE LIST IS NOT IN THE SAVED INSTANCE");
         }
 
+        if(savedInstanceState.containsKey(ALREADY_CALLED_FOR_FAVORITE_CHANGE)){
+            this.alreadyCalledForFavoriteChange=savedInstanceState.getBoolean(ALREADY_CALLED_FOR_FAVORITE_CHANGE);
+        }else{
+            Log.d(MainActivity.TAG,"BOOLEAN ALREADY CALLED FOR FAVORITE CHANGE IS NOT IN THE SAVED INSTANCE");
+        }
+
         if(savedInstanceState.containsKey(FETCHED_DATA_FOR_LIST_KEY)){
             this.spotsList=(Spot_All_Result)savedInstanceState.getSerializable(FETCHED_DATA_FOR_LIST_KEY);
             createSpotsRecyclerView(this.spotsList);
@@ -188,6 +198,7 @@ implements NetworkUtils.SpotsListFetcher,
     public void onSaveInstanceState(Bundle outState) {
 
         outState.putBoolean(ALREADY_CALLED_FOR_LIST_KEY,this.alreadyCalledForList);
+        outState.putBoolean(ALREADY_CALLED_FOR_FAVORITE_CHANGE,this.alreadyCalledForFavoriteChange);
         outState.putSerializable(FETCHED_DATA_FOR_LIST_KEY,this.spotsList);
         if(listProgressBar.getVisibility()==View.VISIBLE){
             outState.putBoolean(IS_LIST_PROGRESS_BAR_VISIBLE,true);
@@ -210,8 +221,6 @@ implements NetworkUtils.SpotsListFetcher,
         this.spotsList=list.body();
         this.alreadyCalledForList=false;
         createSpotsRecyclerView(this.spotsList);
-        //Log.d(MainActivity.TAG,"RADARADARAD A MERRRRS");
-        //NetworkUtils.displayResponseGetAllSpot(this.spotsList);
     }
 
     private void createSpotsRecyclerView(Spot_All_Result spotsList){
@@ -307,15 +316,44 @@ implements NetworkUtils.SpotsListFetcher,
     @Override
     public void onFavoriteStarClick(SpotsAdapter.SpotsViewHolder itemView) {
         if(itemView!=null){
-            //Toast.makeText(this,itemView.getName(),Toast.LENGTH_SHORT).show();
-            itemView.setFavorite(!itemView.isFavorite());
             if(itemView.isFavorite()){
-                itemView.getFavoriteButton().setBackground(ContextCompat.getDrawable(this,R.drawable.star_on));
+                alreadyCalledForFavoriteChange=true;
+                Log.d(MainActivity.TAG,"A call for REMOVE has been established");
+                NetworkUtils.sendNetworkRemoveFavorites(new Favorites_Remove_Body(itemView.getId())
+                        ,getString(R.string.base_url),itemView);
             }else{
-                itemView.getFavoriteButton().setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
+                alreadyCalledForFavoriteChange=true;
+                Log.d(MainActivity.TAG,"A call for ADD has been established");
+                NetworkUtils.sendNetworkAddFavorites(new Favorites_Add_Body(itemView.getId()),
+                        getString(R.string.base_url),itemView);
             }
         }else{
             Toast.makeText(this,"Invalid Favorite listener call",Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onSpotChangeFavoriteState(int result, SpotsAdapter.SpotsViewHolder itemView) {
+        alreadyCalledForFavoriteChange=false;
+        if(result==NetworkUtils.RESULT_ADDED_FAVORITE){
+            Toast.makeText(this,"Added to favorites",Toast.LENGTH_SHORT).show();
+            itemView.setFavorite(true);
+            spotsList.getAll_result_children().
+                    get(itemView.getIndex_in_list()).setFavorite(true);
+            itemView.getFavoriteButton().
+                    setBackground(ContextCompat.getDrawable(this,R.drawable.star_on));
+        }
+        if(result==NetworkUtils.RESULT_REMOVED_FAVORITE){
+            Toast.makeText(this,"Removed from favorites",Toast.LENGTH_SHORT).show();
+            itemView.setFavorite(false);spotsList.getAll_result_children().
+                    get(itemView.getIndex_in_list()).setFavorite(false);
+            itemView.getFavoriteButton().
+                    setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
+        }
+        if(result==NetworkUtils.RESULT_ERROR_CHANGE_STATE){
+            Toast.makeText(this,"Could not mark/unmark",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        return;
     }
 }
