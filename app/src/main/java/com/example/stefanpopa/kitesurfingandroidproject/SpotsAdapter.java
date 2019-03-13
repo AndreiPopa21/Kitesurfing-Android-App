@@ -2,11 +2,14 @@ package com.example.stefanpopa.kitesurfingandroidproject;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Result;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_all_models.Spot_All_Result_Children;
@@ -18,20 +21,26 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
     public interface SpotItemClickListener{
         void onSpotClick(String spotId,String location);
     }
+    public interface FavoriteStarClickListener{
+        void onFavoriteStarClick(SpotsViewHolder itemView);
+    }
 
 
     private Spot_All_Result spotsList;
     private Context context;
     private LayoutInflater mInflater;
     private SpotItemClickListener spotItemClickListener;
+    private FavoriteStarClickListener favoriteStarClickListener;
 
     public SpotsAdapter(Context context,
                         Spot_All_Result spotsList,
-                        SpotItemClickListener spotItemClickListener) {
+                        SpotItemClickListener spotItemClickListener,
+                        FavoriteStarClickListener favoriteStarClickListener) {
         this.spotsList=spotsList;
         this.context=context;
         this.mInflater=LayoutInflater.from(context);
         this.spotItemClickListener=spotItemClickListener;
+        this.favoriteStarClickListener=favoriteStarClickListener;
     }
 
     @NonNull
@@ -53,6 +62,13 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
 
         spotsViewHolder.getNameTextView().setText(info.getName());
         spotsViewHolder.getCountryTextView().setText(info.getCountry());
+        if(info.isFavorite()){
+           spotsViewHolder.getFavoriteButton().setBackground(ContextCompat.getDrawable(this.context,
+                   R.drawable.star_on));
+        }else{
+            spotsViewHolder.getFavoriteButton().setBackground(ContextCompat.getDrawable(this.context,
+                    R.drawable.star_off));
+        }
     }
 
     @Override
@@ -67,6 +83,11 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
     public class SpotsViewHolder extends RecyclerView.ViewHolder {
         private TextView nameTextView;
         private TextView countryTextView;
+        private Button favoriteButton;
+
+        public Button getFavoriteButton() {
+            return favoriteButton;
+        }
 
         public TextView getNameTextView() {
             return nameTextView;
@@ -126,10 +147,17 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
             super(itemView);
             nameTextView=(TextView)itemView.findViewById(R.id.name_text_view);
             countryTextView=(TextView)itemView.findViewById(R.id.country_text_view);
+            favoriteButton=(Button)itemView.findViewById(R.id.favorite_star_button);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     spotItemClickListener.onSpotClick(getId(),getName());
+                }
+            });
+            favoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    favoriteStarClickListener.onFavoriteStarClick(SpotsViewHolder.this);
                 }
             });
         }

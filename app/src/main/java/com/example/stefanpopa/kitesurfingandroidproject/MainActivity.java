@@ -3,6 +3,7 @@ package com.example.stefanpopa.kitesurfingandroidproject;
 import android.content.Intent;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,7 +36,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity
 implements NetworkUtils.SpotsListFetcher,
            NetworkUtils.ReceiveInternetConnection,
-           SpotsAdapter.SpotItemClickListener{
+           SpotsAdapter.SpotItemClickListener,
+           SpotsAdapter.FavoriteStarClickListener {
 
     public static final String TAG="MainActivity";
     //private static final String BASE_URL= "https://internship-2019.herokuapp.com";
@@ -215,7 +217,7 @@ implements NetworkUtils.SpotsListFetcher,
     private void createSpotsRecyclerView(Spot_All_Result spotsList){
         spotsRecyclerView.setHasFixedSize(true);
         spotsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        spotsAdapter=new SpotsAdapter(this,spotsList,this);
+        spotsAdapter=new SpotsAdapter(this,spotsList,this,this);
         spotsRecyclerView.setAdapter(spotsAdapter);
     }
 
@@ -299,6 +301,21 @@ implements NetworkUtils.SpotsListFetcher,
             if(resultCode==RESULT_CANCELED){
                 Toast.makeText(this,"Error processing the Filter result",Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    @Override
+    public void onFavoriteStarClick(SpotsAdapter.SpotsViewHolder itemView) {
+        if(itemView!=null){
+            //Toast.makeText(this,itemView.getName(),Toast.LENGTH_SHORT).show();
+            itemView.setFavorite(!itemView.isFavorite());
+            if(itemView.isFavorite()){
+                itemView.getFavoriteButton().setBackground(ContextCompat.getDrawable(this,R.drawable.star_on));
+            }else{
+                itemView.getFavoriteButton().setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
+            }
+        }else{
+            Toast.makeText(this,"Invalid Favorite listener call",Toast.LENGTH_SHORT).show();
         }
     }
 }
