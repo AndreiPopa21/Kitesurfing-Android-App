@@ -35,7 +35,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
 implements NetworkUtils.SpotsListFetcher,
-           NetworkUtils.ReceiveInternetConnection,
            SpotsAdapter.SpotItemClickListener,
            SpotsAdapter.FavoriteStarClickListener,
             NetworkUtils.SpotChangeFavoriteState{
@@ -90,7 +89,6 @@ implements NetworkUtils.SpotsListFetcher,
         if(!alreadyCalledForList) {
             if(this.spotsList==null){
                 if(NetworkUtils.isNetworkAvailable(this)){
-                    //checkNetworkEverySeconds(5000);
                     performAllSpotsRequest("",0);
                 }else{
                     noConnectionTextView.setVisibility(View.VISIBLE);
@@ -115,7 +113,6 @@ implements NetworkUtils.SpotsListFetcher,
                 }else{
                     Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
         filterButton=(Button)findViewById(R.id.filter_button);
@@ -131,11 +128,6 @@ implements NetworkUtils.SpotsListFetcher,
         spotsRecyclerView=(RecyclerView)findViewById(R.id.spots_recycler_view);
         listProgressBar=(ProgressBar)findViewById(R.id.list_progress_bar);
         noConnectionTextView=(TextView)findViewById(R.id.no_connection_text_view);
-    }
-
-    private void openFilterActivity(){
-        Intent intent = new Intent(this,FilterActivity.class);
-        startActivityForResult(intent,FILTER_ACTIVITY_RESULT_CODE);
     }
 
     private void checkSavedInstanceBundleContent(Bundle savedInstanceState){
@@ -231,17 +223,7 @@ implements NetworkUtils.SpotsListFetcher,
     }
 
     @Override
-    public void onReceivedInternetConnection(boolean status) {
-        if(status){
-            //we have internet connection
-        }else{
-           // Toast.makeText(getParent().getBaseContext(),"No Internet",Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
     public void onSpotClick(String spotId,String location) {
-        //Toast.makeText(this,spotId,Toast.LENGTH_SHORT).show();
         if(spotId==null || location==null){
             Toast.makeText(this,"Error checking the details",Toast.LENGTH_SHORT).show();
             return;
@@ -251,14 +233,6 @@ implements NetworkUtils.SpotsListFetcher,
         detailActivityStartIntent.putExtra(SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY,location);
         startActivity(detailActivityStartIntent);
     }
-
-      /*
-    private void checkNetworkEverySeconds(int miliseconds){
-        Timer timer = new Timer();
-        final int MILLISECONDS = miliseconds;
-        timer.schedule(new CheckConnection(this,3,this), 0, MILLISECONDS);
-
-    }*/
 
     @Override
     protected void onStart() {
@@ -288,6 +262,11 @@ implements NetworkUtils.SpotsListFetcher,
     protected void onDestroy() {
         super.onDestroy();
         Log.d(MainActivity.TAG,"Entered onDestroy()");
+    }
+
+    private void openFilterActivity(){
+        Intent intent = new Intent(this,FilterActivity.class);
+        startActivityForResult(intent,FILTER_ACTIVITY_RESULT_CODE);
     }
 
     @Override

@@ -23,8 +23,9 @@
             android:orientation="horizontal">
             <Button
                 android:id="@+id/favorite_star_button"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:hapticFeedbackEnabled="true"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginLeft="10dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
