@@ -59,6 +59,8 @@ implements NetworkUtils.SpotsListFetcher,
 
     private SpotsAdapter spotsAdapter;
 
+    private int windProbability=0;
+    private String country="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +84,6 @@ implements NetworkUtils.SpotsListFetcher,
         if(!alreadyCalledForList) {
             if(this.spotsList==null){
                 if(NetworkUtils.isNetworkAvailable(this)){
-                    alreadyCalledForList=true;
                     //checkNetworkEverySeconds(5000);
                     performAllSpotsRequest("",0);
                 }else{
@@ -103,10 +104,8 @@ implements NetworkUtils.SpotsListFetcher,
             public void onClick(View v) {
                 Log.d(MainActivity.TAG,"Pressed Refresh button");
                 if(NetworkUtils.isNetworkAvailable(getApplicationContext())){
-                    alreadyCalledForList=true;
-                    spotsList=null;
                     setViewsInvisible();
-                    performAllSpotsRequest("Sri Lanka",0);
+                    performAllSpotsRequest("",0);
                 }else{
                     Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
                 }
@@ -167,6 +166,8 @@ implements NetworkUtils.SpotsListFetcher,
     }
 
     private void performAllSpotsRequest(String country, int windProbability){
+        alreadyCalledForList=true;
+        spotsList=null;
         Log.d(MainActivity.TAG,"A call for the list has been established");
         listProgressBar.setVisibility(View.VISIBLE);
         noConnectionTextView.setVisibility(View.INVISIBLE);
@@ -281,5 +282,23 @@ implements NetworkUtils.SpotsListFetcher,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==FILTER_ACTIVITY_RESULT_CODE){
+            if(resultCode==RESULT_OK){
+                country=data.getStringExtra(FilterActivity.COUNTRY_EDIT_TEXT_KEY);
+                windProbability=data.getIntExtra(FilterActivity.WIND_PROBABILITY_EDIT_TEXT_KEY,0);
+
+                Log.d(MainActivity.TAG,"Country: "+country
+                        +"| WindProbability: "+String.valueOf(windProbability));
+                if(NetworkUtils.isNetworkAvailable(this)){
+                    performAllSpotsRequest(country,windProbability);
+                }else{
+                    setViewsInvisible();
+                    noConnectionTextView.setVisibility(View.VISIBLE);
+                }
+            }
+            if(resultCode==RESULT_CANCELED){
+                Toast.makeText(this,"Error processing the Filter result",Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
