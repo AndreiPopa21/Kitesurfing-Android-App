@@ -11,7 +11,7 @@
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="5dp"/>
+        android:layout_marginBottom="@dimen/recycler_view_margin_bottom"/>
     <ProgressBar
         android:id="@+id/list_progress_bar"
         android:layout_width="wrap_content"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:textSize="18sp"
+        android:textSize="@dimen/no_connection_text_size"
         android:text="@string/no_internet_connection_text"
         android:visibility="invisible"
         android:textColor="@color/black"/>

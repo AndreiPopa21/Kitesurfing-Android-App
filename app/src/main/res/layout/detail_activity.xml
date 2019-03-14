@@ -8,36 +8,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginTop="@dimen/detail_info_margin_top"
             android:id="@+id/detail_name_linear_layout"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:text="Name: "
+                android:text="@string/detail_name_header"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_header_left_margin"
+                android:layout_marginEnd="@dimen/detail_info_header_right_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/name_text_view"
                 android:textSize="@dimen/detail_value_text_size"
                 android:textColor="@color/black"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_margin_left"
+                android:layout_marginEnd="@dimen/detail_info_margin_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/detail_country_linear_layout"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginTop="@dimen/detail_info_margin_top"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -46,25 +42,23 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_header_left_margin"
+                android:layout_marginEnd="@dimen/detail_info_header_left_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/country_text_view"
                 android:textSize="@dimen/detail_value_text_size"
                 android:textColor="@color/black"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_margin_left"
+                android:layout_marginEnd="@dimen/detail_info_margin_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/detail_wind_probability_linear_layout"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/detail_info_margin_top"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -73,109 +67,103 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_header_left_margin"
+                android:layout_marginEnd="@dimen/detail_info_header_right_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/wind_probability_text_view"
                 android:textSize="@dimen/detail_value_text_size"
                 android:textColor="@color/black"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_margin_left"
+                android:layout_marginEnd="@dimen/detail_info_margin_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/detail_when_to_go_linear_layout"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/detail_info_margin_top"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:text="When to go: "
+                android:text="@string/detail_when_to_go_header"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_header_left_margin"
+                android:layout_marginEnd="@dimen/detail_info_header_right_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/when_to_go_text_view"
                 android:textSize="@dimen/detail_value_text_size"
                 android:textColor="@color/black"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_margin_left"
+                android:layout_marginEnd="@dimen/detail_info_margin_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/detail_longitude_linear_layout"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/detail_info_margin_top"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:text="Longitude: "
+                android:text="@string/detail_longitude_header"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_header_left_margin"
+                android:layout_marginEnd="@dimen/detail_info_header_right_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/longitude_text_view"
                 android:textSize="@dimen/detail_value_text_size"
                 android:textColor="@color/black"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_margin_left"
+                android:layout_marginEnd="@dimen/detail_info_margin_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/detail_latitude_linear_layout"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/detail_info_margin_top"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:text="Latitude: "
+                android:text="@string/detail_latitude_header"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_header_left_margin"
+                android:layout_marginEnd="@dimen/detail_info_header_right_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/latitude_text_view"
                 android:textSize="@dimen/detail_value_text_size"
                 android:textColor="@color/black"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="@dimen/detail_info_margin_left"
+                android:layout_marginEnd="@dimen/detail_info_margin_right"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
         <Button
             android:id="@+id/view_location_button"
-            android:text="View Location"
-            android:textSize="16sp"
+            android:text="@string/view_location_button_description"
+            android:textSize="@dimen/view_location_button_text_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"/>
+            android:layout_marginTop="@dimen/view_location_button_margin_top"
+            android:layout_marginStart="@dimen/view_location_button_margin_left"/>
 
     </LinearLayout>
     <ProgressBar
@@ -191,9 +179,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:textSize="18sp"
-        android:text="No Internet Connection"
+        android:textSize="@dimen/no_connection_text_size"
+        android:text="@string/no_internet_connection_text"
         android:visibility="invisible"
-        android:textColor="#000000"/>
+        android:textColor="@color/black"/>
 
 </RelativeLayout>

@@ -9,13 +9,18 @@
     <string name="spot_favorites_remove">api-spot-favorites-remove</string>
 
     <string name="valid_email">andrei.popa2199@gmail.com</string>
-    <string name="filter_country_edit_text_title">Country</string>
+    <string name="filter_country_edit_text_title">Country: </string>
     <string name="filter_country_edit_text_hint">Type name of country</string>
-    <string name="filter_wind_probability_edit_text_title">Wind Probability</string>
+    <string name="filter_wind_probability_edit_text_title">Wind Probability:</string>
     <string name="filter_wind_probability_edit_text_hint">Type value of wind probability</string>
     <string name="filter_apply_button_text">Apply</string>
     <string name="no_internet_connection_text">No Internet Connection</string>
     <string name="country_edit_text_header">Country:</string>
     <string name="wind_probability_edit_text_header">Wind Probability:</string>
+    <string name="detail_name_header">Name:</string>
+    <string name="detail_when_to_go_header">When to go:</string>
+    <string name="detail_longitude_header">Longitude:</string>
+    <string name="detail_latitude_header">Latitude:</string>
+    <string name="view_location_button_description">View Location</string>
 
 </resources>

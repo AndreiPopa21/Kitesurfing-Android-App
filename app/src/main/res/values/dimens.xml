@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <dimen name="detail_title_value_text_size">20sp</dimen>
     <dimen name="detail_value_text_size">16sp</dimen>
+    <dimen name="recycler_view_margin_bottom">5dp</dimen>
+    <dimen name="no_connection_text_size">18sp</dimen>
+    <dimen name="detail_action_bar_title_size">22sp</dimen>
+    <dimen name="refresh_button_width">36dp</dimen>
+    <dimen name="refresh_button_height">36dp</dimen>
+    <dimen name="refresh_button_layout_margin_start">4dp</dimen>
+    <dimen name="refresh_button_layout_margin_end">4dp</dimen>
+    <dimen name="detail_info_margin_top">5dp</dimen>
+    <dimen name="detail_info_margin_right">5dp</dimen>
+    <dimen name="detail_info_margin_left">10dp</dimen>
+    <dimen name="detail_info_header_right_margin">5dp</dimen>
+    <dimen name="detail_info_header_left_margin">10dp</dimen>
+    <dimen name="view_location_button_margin_top">5dp</dimen>
+    <dimen name="view_location_button_margin_left">5dp</dimen>
+    <dimen name="view_location_button_text_size">16sp</dimen>
+    <dimen name="filter_header_margin_top">15dp</dimen>
+    <dimen name="filter_header_margin_bottom">10dp</dimen>
+    <dimen name="filter_header_margin_left">10dp</dimen>
+    <dimen name="filter_edit_text_margin_left">10dp</dimen>
+    <dimen name="filter_edit_text_margin_right">10dp</dimen>
+    <dimen name="filter_button_width">36dp</dimen>
+    <dimen name="filter_button_height">36dp</dimen>
+    <dimen name="filter_button_margin_right">4dp</dimen>
+    <dimen name="spot_item_favorite_button_width">32dp</dimen>
+    <dimen name="spot_item_favorite_button_height">32dp</dimen>
+    <dimen name="spot_item_linear_layout_height">45dp</dimen>
+    <dimen name="spot_item_margin_left">10dp</dimen>
+    <dimen name="spot_item_margin_right">10dp</dimen>
+    <dimen name="spot_item_margin_bottom">10dp</dimen>
+    <dimen name="spot_item_margin_top">10dp</dimen>
+    <dimen name="spot_item_favorite_button_margin_top">8dp</dimen>
+    <dimen name="spot_item_favorite_button_margin_bottom">8dp</dimen>
+    <dimen name="spot_item_favorite_button_margin_right">16dp</dimen>
+    <dimen name="spot_item_favorite_button_margin_left">10dp</dimen>
+    <dimen name="spot_item_name_size">18sp</dimen>
+    <dimen name="spot_item_country_size">16sp</dimen>
 </resources>

@@ -287,7 +287,7 @@ implements NetworkUtils.SpotsListFetcher,
                 }
             }
             if(resultCode==RESULT_CANCELED){
-                Toast.makeText(this,"Error processing the Filter result",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"No filter applied",Toast.LENGTH_SHORT).show();
             }
         }
     }

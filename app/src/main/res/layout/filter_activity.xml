@@ -8,9 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginTop="@dimen/filter_header_margin_top"
+            android:layout_marginBottom="@dimen/filter_header_margin_bottom"
+            android:layout_marginStart="@dimen/filter_header_margin_left"
             android:textSize="@dimen/detail_title_value_text_size"
             android:text="@string/filter_country_edit_text_title"
             android:textColor="@color/black"
@@ -20,13 +20,15 @@
             android:hint="@string/filter_country_edit_text_hint"
             android:id="@+id/filter_country_edit_text"
             android:textColor="@color/black"
+            android:layout_marginStart="@dimen/filter_edit_text_margin_left"
+            android:layout_marginEnd="@dimen/filter_edit_text_margin_right"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"/>
         <TextView
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginTop="@dimen/filter_header_margin_top"
+            android:layout_marginBottom="@dimen/filter_header_margin_bottom"
+            android:layout_marginStart="@dimen/filter_header_margin_left"
             android:textSize="@dimen/detail_title_value_text_size"
             android:text="@string/filter_wind_probability_edit_text_title"
             android:textColor="@color/black"
@@ -37,9 +39,12 @@
             android:id="@+id/filter_wind_probability_edit_text"
             android:text="0"
             android:textColor="@color/black"
+            android:layout_marginStart="@dimen/filter_edit_text_margin_left"
+            android:layout_marginEnd="@dimen/filter_edit_text_margin_right"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

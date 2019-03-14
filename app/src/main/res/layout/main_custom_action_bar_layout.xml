@@ -10,9 +10,9 @@
 
         <Button
             android:id="@+id/filter_button"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="4dp"
+            android:layout_width="@dimen/filter_button_width"
+            android:layout_height="@dimen/filter_button_height"
+            android:layout_marginEnd="@dimen/filter_button_margin_right"
             android:background="@drawable/filter"
             android:backgroundTint="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/main_refresh_button"
@@ -20,9 +20,9 @@
 
         <Button
             android:id="@+id/main_refresh_button"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="4dp"
+            android:layout_width="@dimen/refresh_button_width"
+            android:layout_height="@dimen/refresh_button_height"
+            android:layout_marginEnd="@dimen/filter_button_margin_right"
             android:background="@drawable/ic_baseline_refresh_24px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -5,14 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginBottom="10dp"
-    android:layout_marginTop="10dp">
+    android:layout_marginStart="@dimen/spot_item_margin_left"
+    android:layout_marginEnd="@dimen/spot_item_margin_right"
+    android:layout_marginBottom="@dimen/spot_item_margin_bottom"
+    android:layout_marginTop="@dimen/spot_item_margin_top">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="@dimen/spot_item_linear_layout_height"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="0dp">
@@ -24,13 +24,14 @@
             <Button
                 android:id="@+id/favorite_star_button"
                 android:hapticFeedbackEnabled="true"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginLeft="10dp"
+                android:layout_width="@dimen/spot_item_favorite_button_width"
+                android:layout_height="@dimen/spot_item_favorite_button_height"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/spot_item_favorite_button_margin_top"
+                android:layout_marginBottom="@dimen/spot_item_favorite_button_margin_bottom"
+                android:layout_marginEnd="@dimen/spot_item_favorite_button_margin_right"
+                android:layout_marginStart="@dimen/spot_item_favorite_button_margin_left"
                 android:background="@drawable/star_off"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -39,13 +40,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
                 <TextView
                     android:id="@+id/name_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/spot_item_name_size"
                     android:textStyle="bold" />
 
                 <TextView
@@ -53,17 +53,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/spot_item_country_size" />
             </LinearLayout>
-
 
         </android.support.constraint.ConstraintLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/black" />
     </LinearLayout>
 
 
