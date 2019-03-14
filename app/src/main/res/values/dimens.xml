@@ -38,4 +38,6 @@
     <dimen name="spot_item_favorite_button_margin_left">10dp</dimen>
     <dimen name="spot_item_name_size">18sp</dimen>
     <dimen name="spot_item_country_size">16sp</dimen>
+    <dimen name="detail_favorite_button_width">36dp</dimen>
+    <dimen name="detail_favorite_button_height">36dp</dimen>
 </resources>

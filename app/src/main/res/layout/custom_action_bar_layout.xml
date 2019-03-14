@@ -6,21 +6,36 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
+
     <android.support.constraint.ConstraintLayout>
 
         <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:id="@+id/action_bar_spot_name_text_view"
-            android:textSize="@dimen/detail_action_bar_title_size"
-            android:textColor="@color/white"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/detail_action_bar_title_size" />
+
+        <Button
+            android:id="@+id/detail_favorite_star_button"
+            android:layout_width="@dimen/detail_favorite_button_width"
+            android:layout_height="@dimen/detail_favorite_button_height"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:backgroundTint="@color/white"
+            android:layout_marginEnd="48dp"
+            android:background="@drawable/star_off"
+            android:hapticFeedbackEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/detail_refresh_button"
+            android:backgroundTint="@color/white"
             android:layout_width="@dimen/refresh_button_width"
             android:layout_height="@dimen/refresh_button_height"
-            android:layout_marginEnd="@dimen/refresh_button_layout_margin_start"
             android:layout_marginStart="@dimen/refresh_button_layout_margin_end"
+            android:layout_marginEnd="@dimen/refresh_button_layout_margin_start"
             android:background="@drawable/ic_baseline_refresh_24px"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

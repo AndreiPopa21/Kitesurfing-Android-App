@@ -319,4 +319,22 @@ implements NetworkUtils.SpotDetailsFetcher {
             Toast.makeText(this,"Details have not been succesfully received",Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d(DetailActivity.DETAIL_TAG,"Back button was pressed");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(DetailActivity.DETAIL_TAG,"Entered onStop() callback");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(DetailActivity.DETAIL_TAG,"Entered onDestroy() callback");
+    }
 }

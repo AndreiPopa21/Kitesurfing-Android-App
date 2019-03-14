@@ -20,6 +20,7 @@
 
         <Button
             android:id="@+id/main_refresh_button"
+            android:backgroundTint="@color/white"
             android:layout_width="@dimen/refresh_button_width"
             android:layout_height="@dimen/refresh_button_height"
             android:layout_marginEnd="@dimen/filter_button_margin_right"

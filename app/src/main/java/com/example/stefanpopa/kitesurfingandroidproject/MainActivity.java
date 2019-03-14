@@ -272,6 +272,10 @@ implements NetworkUtils.SpotsListFetcher,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(data==null)
+            return;
+
         if(requestCode==FILTER_ACTIVITY_RESULT_CODE){
             if(resultCode==RESULT_OK){
                 country=data.getStringExtra(FilterActivity.COUNTRY_EDIT_TEXT_KEY);
