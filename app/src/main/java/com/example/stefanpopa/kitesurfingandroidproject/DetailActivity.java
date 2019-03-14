@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,7 +22,8 @@ import org.w3c.dom.Text;
 import java.io.Serializable;
 
 public class DetailActivity extends AppCompatActivity
-implements NetworkUtils.SpotDetailsFetcher {
+implements NetworkUtils.SpotDetailsFetcher,
+           NetworkUtils.SpotChangeFavoriteState{
 
     public static final String DETAIL_TAG="DetailActivity";
     public static final String IS_DETAIL_NO_CONNECTION_TEXT_VIEW_VISIBLE="is_detail_no_connection_text_view_visible";
@@ -29,6 +31,7 @@ implements NetworkUtils.SpotDetailsFetcher {
     public static final String DETAIL_ON_SAVED_INSTANCE="detail_on_saved_instance";
     public static final String SPOT_DETAILS_OBJECT="spot_details_object";
     public static final String ALREADY_CALLED_FOR_DETAILS_KEY="already_called_for_list";
+    public static final String DETAIL_ALREADY_CALLED_FOR_FAVORITE_CHANGE="detail_already_favorite_change";
     public static final String SPOT_DETAIL_ID="spot_detail_id";
     public static final String SPOT_DETAIL_LOCATION="spot_detail_location";
 
@@ -53,13 +56,17 @@ implements NetworkUtils.SpotDetailsFetcher {
 
     private TextView actionBarNameTextView;
     private Button detailRefreshButton;
+    private Button detailFavoriteButton;
 
     //boolean that tells us whether a configuration change took place
     private boolean detailOnSavedInstance=false;
     private boolean alreadyCalledForDetails=false;
+    private boolean alreadyCalledForFavoriteChange=false;
 
     private String spotId;
     private String spotLocation;
+
+    private boolean spotIsFavorite=false;
 
     private SpotDetails spotDetails=null;//object that holds all details about our spot
 
@@ -69,7 +76,8 @@ implements NetworkUtils.SpotDetailsFetcher {
         setContentView(R.layout.detail_activity);
 
         NetworkUtils.spotDetailsFetchListener=this;
-
+        NetworkUtils.spotChangeFavoriteStateListener=this;
+        setCustomActionBar();
         bindViews();
 
         if(savedInstanceState==null){
@@ -104,31 +112,56 @@ implements NetworkUtils.SpotDetailsFetcher {
             }
         }
     }
+    private void bindViews(){
+        detailProgressBar=(ProgressBar)findViewById(R.id.detail_progress_bar);
+        detailNoConnectionTextView=(TextView)findViewById(R.id.detail_no_connection_text_view);
 
-    private void customizeActionBar(){
+        nameLinearLayout=(LinearLayout)findViewById(R.id.detail_name_linear_layout);
+        countryLinearLayout=(LinearLayout)findViewById(R.id.detail_country_linear_layout);
+        windProbabilityLinearLayout=(LinearLayout)findViewById(R.id.detail_wind_probability_linear_layout);
+        whenToGoLineaLayout=(LinearLayout)findViewById(R.id.detail_when_to_go_linear_layout);
+        latitudeLinearLayout = (LinearLayout)findViewById(R.id.detail_latitude_linear_layout);
+        longitudeLinearLayout=(LinearLayout)findViewById(R.id.detail_longitude_linear_layout);
+
+        nameTextView=(TextView)findViewById(R.id.name_text_view);
+        countryTextView=(TextView)findViewById(R.id.country_text_view);
+        windProbabilityTextView=(TextView)findViewById(R.id.wind_probability_text_view);
+        whenToGoTextView=(TextView)findViewById(R.id.when_to_go_text_view);
+        longitudeTextView=(TextView)findViewById(R.id.longitude_text_view);
+        latitudeTextView=(TextView)findViewById(R.id.latitude_text_view);
+
+        viewLocationButton=(Button)findViewById(R.id.view_location_button);
+
+        actionBarNameTextView=(TextView)getSupportActionBar().getCustomView()
+                .findViewById(R.id.action_bar_spot_name_text_view);
+        detailRefreshButton=(Button)getSupportActionBar().getCustomView()
+                .findViewById(R.id.detail_refresh_button);
+        detailFavoriteButton=(Button)getSupportActionBar().getCustomView()
+                .findViewById(R.id.detail_favorite_star_button);
+
+        setViewsInvisible();
+    }
+    private void setCustomActionBar(){
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.custom_action_bar_layout);
-        View view =getSupportActionBar().getCustomView();
-        actionBarNameTextView=(TextView)view.findViewById(R.id.action_bar_spot_name_text_view);
+    }
+    private void customizeActionBar(){
+
         actionBarNameTextView.setText(spotLocation);
-        detailRefreshButton=(Button)view.findViewById(R.id.detail_refresh_button);
         detailRefreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(DetailActivity.DETAIL_TAG,"Pressed Refresh button");
-                if(NetworkUtils.isNetworkAvailable(getApplicationContext())){
-                    alreadyCalledForDetails=true;
-                    spotDetails=null;
-                    setViewsInvisible();
-                    performSpotDetailRequest(spotId);
-                }else{
-                    Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
-                }
+                refreshDetails();
+            }
+        });
+        detailFavoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                markFavorite();
             }
         });
     }
-
     private void populateLayout(final SpotDetails spotDetails){
         nameLinearLayout.setVisibility(View.VISIBLE);
         nameTextView.setText(spotDetails.getName());
@@ -163,8 +196,18 @@ implements NetworkUtils.SpotDetailsFetcher {
                 }
             }
         });
-    }
 
+        detailFavoriteButton.setEnabled(true);
+        if(spotDetails.isFavorite()){
+            spotIsFavorite=true;
+            detailFavoriteButton.
+                    setBackground(ContextCompat.getDrawable(this,R.drawable.star_on));
+        }else{
+            spotIsFavorite=false;
+            detailFavoriteButton.
+                    setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
+        }
+    }
     private void setViewsInvisible(){
 
         detailProgressBar.setVisibility(View.INVISIBLE);
@@ -179,6 +222,24 @@ implements NetworkUtils.SpotDetailsFetcher {
 
         viewLocationButton.setVisibility(View.INVISIBLE);
         viewLocationButton.setEnabled(false);
+
+        detailFavoriteButton.setEnabled(false);
+    }
+
+    private void refreshDetails(){
+        Log.d(DetailActivity.DETAIL_TAG,"Pressed Refresh button");
+        if(NetworkUtils.isNetworkAvailable(getApplicationContext())){
+            alreadyCalledForDetails=true;
+            spotDetails=null;
+            setViewsInvisible();
+            performSpotDetailRequest(spotId);
+        }else{
+            Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void markFavorite(){
+
     }
 
     private void closeOnError(String errorMessage){
@@ -205,10 +266,20 @@ implements NetworkUtils.SpotDetailsFetcher {
         }else{
             alreadyCalledForDetails=false;
         }
+
+        if(savedInstanceState.containsKey(DETAIL_ALREADY_CALLED_FOR_FAVORITE_CHANGE)){
+            alreadyCalledForFavoriteChange=savedInstanceState.
+                    getBoolean(DETAIL_ALREADY_CALLED_FOR_FAVORITE_CHANGE);
+        }else{
+            alreadyCalledForFavoriteChange=false;
+        }
+
         if(savedInstanceState.containsKey(SPOT_DETAILS_OBJECT)){
             spotDetails=(SpotDetails)savedInstanceState.getSerializable(SPOT_DETAILS_OBJECT);
+            spotIsFavorite=spotDetails.isFavorite();
         }else{
             spotDetails=null;
+            spotIsFavorite=false;
         }
 
         if(savedInstanceState.containsKey(SPOT_DETAIL_ID)){
@@ -224,29 +295,6 @@ implements NetworkUtils.SpotDetailsFetcher {
             spotLocation=null;
             closeOnError("There is a problem getting the spotLocation");
         }
-    }
-
-    private void bindViews(){
-        detailProgressBar=(ProgressBar)findViewById(R.id.detail_progress_bar);
-        detailNoConnectionTextView=(TextView)findViewById(R.id.detail_no_connection_text_view);
-
-        nameLinearLayout=(LinearLayout)findViewById(R.id.detail_name_linear_layout);
-        countryLinearLayout=(LinearLayout)findViewById(R.id.detail_country_linear_layout);
-        windProbabilityLinearLayout=(LinearLayout)findViewById(R.id.detail_wind_probability_linear_layout);
-        whenToGoLineaLayout=(LinearLayout)findViewById(R.id.detail_when_to_go_linear_layout);
-        latitudeLinearLayout = (LinearLayout)findViewById(R.id.detail_latitude_linear_layout);
-        longitudeLinearLayout=(LinearLayout)findViewById(R.id.detail_longitude_linear_layout);
-
-        nameTextView=(TextView)findViewById(R.id.name_text_view);
-        countryTextView=(TextView)findViewById(R.id.country_text_view);
-        windProbabilityTextView=(TextView)findViewById(R.id.wind_probability_text_view);
-        whenToGoTextView=(TextView)findViewById(R.id.when_to_go_text_view);
-        longitudeTextView=(TextView)findViewById(R.id.longitude_text_view);
-        latitudeTextView=(TextView)findViewById(R.id.latitude_text_view);
-
-        viewLocationButton=(Button)findViewById(R.id.view_location_button);
-
-        setViewsInvisible();
     }
 
     private void checkViewsVisibility(Bundle savedInstanceState){
@@ -294,6 +342,8 @@ implements NetworkUtils.SpotDetailsFetcher {
 
         outState.putBoolean(ALREADY_CALLED_FOR_DETAILS_KEY,alreadyCalledForDetails);
 
+        outState.putBoolean(DETAIL_ALREADY_CALLED_FOR_FAVORITE_CHANGE,alreadyCalledForFavoriteChange);
+
         outState.putSerializable(SPOT_DETAILS_OBJECT,spotDetails);
 
         outState.putString(SPOT_DETAIL_ID,spotId);
@@ -324,6 +374,7 @@ implements NetworkUtils.SpotDetailsFetcher {
     public void onBackPressed() {
         super.onBackPressed();
         Log.d(DetailActivity.DETAIL_TAG,"Back button was pressed");
+        Toast.makeText(this,"Back button pressed",Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -336,5 +387,23 @@ implements NetworkUtils.SpotDetailsFetcher {
     protected void onDestroy() {
         super.onDestroy();
         Log.d(DetailActivity.DETAIL_TAG,"Entered onDestroy() callback");
+    }
+
+    @Override
+    public void onSpotChangeFavoriteState(int result, SpotsAdapter.SpotsViewHolder itemView) {
+        alreadyCalledForFavoriteChange=false;
+        if(result==NetworkUtils.RESULT_ADDED_FAVORITE){
+            Toast.makeText(this,"Added to favorites",Toast.LENGTH_SHORT).show();
+            detailFavoriteButton.setBackground(ContextCompat.getDrawable(this,R.drawable.star_on));
+        }
+        if(result==NetworkUtils.RESULT_REMOVED_FAVORITE){
+            Toast.makeText(this,"Removed from favorites",Toast.LENGTH_SHORT).show();
+            detailFavoriteButton.setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
+        }
+        if(result==NetworkUtils.RESULT_ERROR_CHANGE_STATE){
+            Toast.makeText(this,"Could not mark/unmark",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        return;
     }
 }

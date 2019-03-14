@@ -72,7 +72,7 @@ implements NetworkUtils.SpotsListFetcher,
         setContentView(R.layout.activity_main);
 
         bindViews();
-        customizeActionBar();
+        setAndCustomizeActionBar();
         NetworkUtils.allListFetchListener=this;
         NetworkUtils.spotChangeFavoriteStateListener=this;
 
@@ -97,7 +97,7 @@ implements NetworkUtils.SpotsListFetcher,
             }
         }
     }
-    private void customizeActionBar(){
+    private void setAndCustomizeActionBar(){
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
         getSupportActionBar().setCustomView(R.layout.main_custom_action_bar_layout);
@@ -178,7 +178,6 @@ implements NetworkUtils.SpotsListFetcher,
         NetworkUtils.sendNetworkSpotAllRequest(new Spot_All_Body(country, windProbability),
                                                 getString(R.string.base_url));
     }
-
 
     private void setViewsInvisible(){
         listProgressBar.setVisibility(View.INVISIBLE);
