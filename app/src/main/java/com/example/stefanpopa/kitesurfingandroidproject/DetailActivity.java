@@ -15,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_add_models.Favorites_Add_Body;
+import com.example.stefanpopa.kitesurfingandroidproject.api_spot_favorites_remove_models.Favorites_Remove_Body;
 import com.example.stefanpopa.kitesurfingandroidproject.api_spot_get_details_models.Spot_Details_Body;
 
 import org.w3c.dom.Text;
@@ -202,10 +204,12 @@ implements NetworkUtils.SpotDetailsFetcher,
             spotIsFavorite=true;
             detailFavoriteButton.
                     setBackground(ContextCompat.getDrawable(this,R.drawable.star_on));
+            Log.d(DetailActivity.DETAIL_TAG,"SpotIsFavorite: true");
         }else{
             spotIsFavorite=false;
             detailFavoriteButton.
                     setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
+            Log.d(DetailActivity.DETAIL_TAG,"SpotIsFavorite: false");
         }
     }
     private void setViewsInvisible(){
@@ -224,6 +228,9 @@ implements NetworkUtils.SpotDetailsFetcher,
         viewLocationButton.setEnabled(false);
 
         detailFavoriteButton.setEnabled(false);
+        detailFavoriteButton.
+                setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
+        spotIsFavorite=false;
     }
 
     private void refreshDetails(){
@@ -239,7 +246,19 @@ implements NetworkUtils.SpotDetailsFetcher,
     }
 
     private void markFavorite(){
-
+        if(alreadyCalledForFavoriteChange)
+            return;
+        if(spotIsFavorite){
+            alreadyCalledForFavoriteChange=true;
+            Log.d(MainActivity.TAG,"A call for REMOVE has been established");
+            NetworkUtils.sendNetworkRemoveFavorites(new Favorites_Remove_Body(spotId)
+                    ,getString(R.string.base_url),null);
+        }else{
+            alreadyCalledForFavoriteChange=true;
+            Log.d(MainActivity.TAG,"A call for ADD has been established");
+            NetworkUtils.sendNetworkAddFavorites(new Favorites_Add_Body(spotId),
+                    getString(R.string.base_url),null);
+        }
     }
 
     private void closeOnError(String errorMessage){
@@ -395,10 +414,14 @@ implements NetworkUtils.SpotDetailsFetcher,
         if(result==NetworkUtils.RESULT_ADDED_FAVORITE){
             Toast.makeText(this,"Added to favorites",Toast.LENGTH_SHORT).show();
             detailFavoriteButton.setBackground(ContextCompat.getDrawable(this,R.drawable.star_on));
+            spotIsFavorite=true;
+            spotDetails.setFavorite(true);
         }
         if(result==NetworkUtils.RESULT_REMOVED_FAVORITE){
             Toast.makeText(this,"Removed from favorites",Toast.LENGTH_SHORT).show();
             detailFavoriteButton.setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
+            spotIsFavorite=false;
+            spotDetails.setFavorite(false);
         }
         if(result==NetworkUtils.RESULT_ERROR_CHANGE_STATE){
             Toast.makeText(this,"Could not mark/unmark",Toast.LENGTH_SHORT).show();

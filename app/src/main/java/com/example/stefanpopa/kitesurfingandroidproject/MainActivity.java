@@ -297,6 +297,10 @@ implements NetworkUtils.SpotsListFetcher,
 
     @Override
     public void onFavoriteStarClick(SpotsAdapter.SpotsViewHolder itemView) {
+        if(alreadyCalledForFavoriteChange){
+            Log.d(MainActivity.TAG,"A call to mark/unmark has already been established");
+            Log.d(MainActivity.TAG,"Need to wait for response");
+        }
         if(itemView!=null){
             if(itemView.isFavorite()){
                 alreadyCalledForFavoriteChange=true;
@@ -316,6 +320,7 @@ implements NetworkUtils.SpotsListFetcher,
 
     @Override
     public void onSpotChangeFavoriteState(int result, SpotsAdapter.SpotsViewHolder itemView) {
+
         alreadyCalledForFavoriteChange=false;
         if(result==NetworkUtils.RESULT_ADDED_FAVORITE){
             Toast.makeText(this,"Added to favorites",Toast.LENGTH_SHORT).show();
