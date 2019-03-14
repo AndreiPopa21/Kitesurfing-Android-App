@@ -8,11 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
             android:id="@+id/detail_name_linear_layout"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -20,6 +20,8 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -36,7 +38,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -44,6 +46,8 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -61,7 +65,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -69,6 +73,8 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -86,7 +92,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -94,6 +100,8 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -111,7 +119,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -119,6 +127,8 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -136,7 +146,7 @@
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
@@ -144,6 +154,8 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView

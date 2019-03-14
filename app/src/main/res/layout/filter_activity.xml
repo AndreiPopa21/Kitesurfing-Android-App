@@ -35,6 +35,7 @@
         <EditText
             android:hint="@string/filter_wind_probability_edit_text_hint"
             android:id="@+id/filter_wind_probability_edit_text"
+            android:text="0"
             android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
