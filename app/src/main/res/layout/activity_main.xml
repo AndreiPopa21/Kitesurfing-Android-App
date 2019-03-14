@@ -26,7 +26,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:textSize="18sp"
-        android:text="No Internet Connection"
+        android:text="@string/no_internet_connection_text"
         android:visibility="invisible"
         android:textColor="@color/black"/>
 

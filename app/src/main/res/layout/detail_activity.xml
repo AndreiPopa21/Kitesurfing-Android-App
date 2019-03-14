@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:text="Country: "
+                android:text="@string/country_edit_text_header"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"
@@ -69,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:text="Wind Probability: "
+                android:text="@string/wind_probability_edit_text_header"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/detail_title_value_text_size"

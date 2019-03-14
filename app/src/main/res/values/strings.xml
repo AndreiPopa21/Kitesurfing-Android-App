@@ -14,5 +14,8 @@
     <string name="filter_wind_probability_edit_text_title">Wind Probability</string>
     <string name="filter_wind_probability_edit_text_hint">Type value of wind probability</string>
     <string name="filter_apply_button_text">Apply</string>
+    <string name="no_internet_connection_text">No Internet Connection</string>
+    <string name="country_edit_text_header">Country:</string>
+    <string name="wind_probability_edit_text_header">Wind Probability:</string>
 
 </resources>
