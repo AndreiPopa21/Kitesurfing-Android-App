@@ -270,6 +270,7 @@ implements NetworkUtils.SpotsListFetcher,
             Log.d(MainActivity.TAG,"Need to wait for response");
         }
         if(itemView!=null){
+            listProgressBar.setVisibility(View.VISIBLE);
             if(itemView.isFavorite()){
                 alreadyCalledForFavoriteChange=true;
                 Log.d(MainActivity.TAG,"A call for REMOVE has been established");
@@ -290,6 +291,8 @@ implements NetworkUtils.SpotsListFetcher,
     public void onSpotChangeFavoriteState(int result, SpotsAdapter.SpotsViewHolder itemView) {
 
         alreadyCalledForFavoriteChange=false;
+        listProgressBar.setVisibility(View.INVISIBLE);
+
         if(result==NetworkUtils.RESULT_ADDED_FAVORITE){
             Toast.makeText(this,"Added "
                     +itemView.getName()+" to favorites",Toast.LENGTH_SHORT).show();

@@ -254,16 +254,23 @@ implements NetworkUtils.SpotDetailsFetcher,
     private void markFavorite(){
         if(alreadyCalledForFavoriteChange)
             return;
-        if(spotIsFavorite){
-            alreadyCalledForFavoriteChange=true;
-            Log.d(MainActivity.TAG,"A call for REMOVE has been established");
-            NetworkUtils.sendNetworkRemoveFavorites(new Favorites_Remove_Body(spotId)
-                    ,getString(R.string.base_url),null);
+
+        if(NetworkUtils.isNetworkAvailable(this)){
+            detailProgressBar.setVisibility(View.VISIBLE);
+            if(spotIsFavorite){
+                alreadyCalledForFavoriteChange=true;
+                Log.d(MainActivity.TAG,"A call for REMOVE has been established");
+                NetworkUtils.sendNetworkRemoveFavorites(new Favorites_Remove_Body(spotId)
+                        ,getString(R.string.base_url),null);
+            }else{
+                alreadyCalledForFavoriteChange=true;
+                Log.d(MainActivity.TAG,"A call for ADD has been established");
+                NetworkUtils.sendNetworkAddFavorites(new Favorites_Add_Body(spotId),
+                        getString(R.string.base_url),null);
+            }
         }else{
-            alreadyCalledForFavoriteChange=true;
-            Log.d(MainActivity.TAG,"A call for ADD has been established");
-            NetworkUtils.sendNetworkAddFavorites(new Favorites_Add_Body(spotId),
-                    getString(R.string.base_url),null);
+            Log.d(DetailActivity.DETAIL_TAG,"Tried mark/unmark, but no internet connection");
+            Toast.makeText(this,"No internet connection",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -442,6 +449,7 @@ implements NetworkUtils.SpotDetailsFetcher,
     @Override
     public void onSpotChangeFavoriteState(int result, SpotsAdapter.SpotsViewHolder itemView) {
         alreadyCalledForFavoriteChange=false;
+        detailProgressBar.setVisibility(View.INVISIBLE);
         if(result==NetworkUtils.RESULT_ADDED_FAVORITE){
             Toast.makeText(this,"Added to favorites",Toast.LENGTH_SHORT).show();
             detailFavoriteButton.setBackground(ContextCompat.getDrawable(this,R.drawable.star_on));
