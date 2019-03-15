@@ -26,7 +26,7 @@ public class FilterActivity extends AppCompatActivity {
         setTitle("Filter");
         Intent intentThatStartedActivity = getIntent();
         if(intentThatStartedActivity==null){
-            closeOnError("Null intent started the activity");
+            closeOnError(getString(R.string.null_intent_started_the_ativity_error_text));
         }
         bindViews();
     }

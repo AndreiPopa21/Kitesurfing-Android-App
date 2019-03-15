@@ -91,10 +91,10 @@ implements NetworkUtils.SpotDetailsFetcher,
         if(savedInstanceState==null){
             Intent intentThatStartedActivity = getIntent();
             if(intentThatStartedActivity==null){
-                closeOnError("Passed empty Intent to the DetailActivity");
+                closeOnError(getString(R.string.passed_empty_intent_to_detail_toast_text));
             }
             if(!checkIntentContent(intentThatStartedActivity)){
-                closeOnError("The extras do not follow the specified format");
+                closeOnError(getString(R.string.extras_do_not_follow_format_toast_text));
             }
             spotDetails=null;
         }else {
@@ -102,7 +102,6 @@ implements NetworkUtils.SpotDetailsFetcher,
             checkSavedInstanceBundleContent(savedInstanceState);
         }
         Log.d(DetailActivity.DETAIL_TAG,"SpotId is: "+this.spotId+"| Location is: "+this.spotLocation);
-       // setTitle(this.spotLocation);
         customizeActionBar();
 
         if(!alreadyCalledForDetails){
@@ -247,7 +246,9 @@ implements NetworkUtils.SpotDetailsFetcher,
             setViewsInvisible();
             performSpotDetailRequest(spotId);
         }else{
-            Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.no_internet_connection_text),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -270,7 +271,9 @@ implements NetworkUtils.SpotDetailsFetcher,
             }
         }else{
             Log.d(DetailActivity.DETAIL_TAG,"Tried mark/unmark, but no internet connection");
-            Toast.makeText(this,"No internet connection",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,
+                            getString(R.string.no_internet_connection_text),
+                            Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -285,15 +288,15 @@ implements NetworkUtils.SpotDetailsFetcher,
             return false;
         }
         if(!extras.containsKey(MainActivity.SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY))
-            closeOnError("Intent not containing spotId");
+            closeOnError(getString(R.string.intent_not_containing_spotid_error_text));
         if(!extras.containsKey(MainActivity.SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY))
-            closeOnError("Intent not containing spotLocation");
-        if(!extras.containsKey(MainActivity.SPOT_INDEX_IN_MAIN_LIST))
-            closeOnError("Intent not containing spot_index_in_main_list");
+            closeOnError(getString(R.string.intent_not_containing_spotlocation_error_text));
+        if(!extras.containsKey(MainActivity.SPOT_INDEX_IN_MAIN_LIST_KEY))
+            closeOnError(getString(R.string.intent_not_containing_spot_index_error_text));
 
         spotLocation = extras.getString(MainActivity.SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY);
         spotId= extras.getString(MainActivity.SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY);
-        spotIndexInMainList=extras.getInt(MainActivity.SPOT_INDEX_IN_MAIN_LIST);
+        spotIndexInMainList=extras.getInt(MainActivity.SPOT_INDEX_IN_MAIN_LIST_KEY);
         if(spotLocation==null || spotId==null){
             return false;
         }
@@ -326,21 +329,21 @@ implements NetworkUtils.SpotDetailsFetcher,
             spotId=savedInstanceState.getString(SPOT_DETAIL_ID);
         }else{
             spotId=null;
-            closeOnError("There is a problem getting the spotId from onSavedInstance");
+            closeOnError(getString(R.string.problem_getting_spotid_saved_text));
         }
 
         if(savedInstanceState.containsKey(SPOT_DETAIL_LOCATION)){
             spotLocation=savedInstanceState.getString(SPOT_DETAIL_LOCATION);
         }else{
             spotLocation=null;
-            closeOnError("There is a problem getting the spotLocation from onSavedInstance");
+            closeOnError(getString(R.string.problem_getting_spot_location_error_text));
         }
 
         if(savedInstanceState.containsKey(SPOT_DETAIL_INDEX_IN_MAIN_LIST)){
             spotIndexInMainList=savedInstanceState.getInt(SPOT_DETAIL_INDEX_IN_MAIN_LIST);
         }else{
             spotIndexInMainList=0;
-            closeOnError("There is a problem getting the spotIndexInMainList from onSavedInstance");
+            closeOnError(getString(R.string.problem_getting_spot_index_error_text));
         }
     }
 
@@ -410,14 +413,14 @@ implements NetworkUtils.SpotDetailsFetcher,
             detailProgressBar.setVisibility(View.INVISIBLE);
             detailNoConnectionTextView.setVisibility(View.INVISIBLE);
             Log.d(DetailActivity.DETAIL_TAG,"Details have been succesfully received");
-            Toast.makeText(this,"Details have been succesfully received",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.details_succesfully_received_toast_text),Toast.LENGTH_SHORT).show();
             populateLayout(spotDetails);
         }
         if(result==NetworkUtils.RESULT_ERROR_DETAILS_RETURNED){
             detailProgressBar.setVisibility(View.INVISIBLE);
             detailNoConnectionTextView.setVisibility(View.INVISIBLE);
             Log.d(DetailActivity.DETAIL_TAG,"Details have not been succesfully received");
-            Toast.makeText(this,"Details have not been succesfully received",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.details_not_succesfully_received_toast_text),Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -435,35 +438,23 @@ implements NetworkUtils.SpotDetailsFetcher,
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(DetailActivity.DETAIL_TAG,"Entered onStop() callback");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(DetailActivity.DETAIL_TAG,"Entered onDestroy() callback");
-    }
-
-    @Override
     public void onSpotChangeFavoriteState(int result, SpotsAdapter.SpotsViewHolder itemView) {
         alreadyCalledForFavoriteChange=false;
         detailProgressBar.setVisibility(View.INVISIBLE);
         if(result==NetworkUtils.RESULT_ADDED_FAVORITE){
-            Toast.makeText(this,"Added to favorites",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.added_to_favorites_toast_text),Toast.LENGTH_SHORT).show();
             detailFavoriteButton.setBackground(ContextCompat.getDrawable(this,R.drawable.star_on));
             spotIsFavorite=true;
             spotDetails.setFavorite(true);
         }
         if(result==NetworkUtils.RESULT_REMOVED_FAVORITE){
-            Toast.makeText(this,"Removed from favorites",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.removed_from_favorites_toast_text),Toast.LENGTH_SHORT).show();
             detailFavoriteButton.setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
             spotIsFavorite=false;
             spotDetails.setFavorite(false);
         }
         if(result==NetworkUtils.RESULT_ERROR_CHANGE_STATE){
-            Toast.makeText(this,"Could not mark/unmark",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.could_not_mark_unmark_toast_text),Toast.LENGTH_SHORT).show();
             return;
         }
         return;

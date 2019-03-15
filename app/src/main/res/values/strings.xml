@@ -22,5 +22,22 @@
     <string name="detail_longitude_header">Longitude:</string>
     <string name="detail_latitude_header">Latitude:</string>
     <string name="view_location_button_description">View Location</string>
+    <string name="no_internet_connection_toast_text">No Internet Connection</string>
+    <string name="error_opening_details_toast_text">Error opening Details</string>
+    <string name="could_not_mark_unmark_toast_text">Error: Could not mark/unmark</string>
+    <string name="no_filter_applied_toast_text">No filter applied</string>
+    <string name="passed_empty_intent_to_detail_toast_text">Passed empty Intent to the DetailActivity</string>
+    <string name="extras_do_not_follow_format_toast_text">The extras do not follow the specified format</string>
+    <string name="intent_not_containing_spotid_error_text">Intent not containing spotId</string>
+    <string name="intent_not_containing_spotlocation_error_text">Intent not containing spotLocation</string>
+    <string name="intent_not_containing_spot_index_error_text">Intent not containing spot_index_in_main_list</string>
+    <string name="problem_getting_spotid_saved_text">There is a problem getting the spotId from onSavedInstance</string>
+    <string name="problem_getting_spot_location_error_text">There is a problem getting the spotLocation from onSavedInstance</string>
+    <string name="problem_getting_spot_index_error_text">There is a problem getting the spotIndexInMainList from onSavedInstance</string>
+    <string name="details_succesfully_received_toast_text">Details have been succesfully received</string>
+    <string name="details_not_succesfully_received_toast_text">Details have not been succesfully received</string>
+    <string name="added_to_favorites_toast_text">Added to favorites</string>
+    <string name="removed_from_favorites_toast_text">Removed from favorites</string>
+    <string name="null_intent_started_the_ativity_error_text">Null intent started the activity</string>
 
 </resources>

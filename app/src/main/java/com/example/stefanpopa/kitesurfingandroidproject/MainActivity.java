@@ -42,14 +42,14 @@ implements NetworkUtils.SpotsListFetcher,
     public static final String TAG="MainActivity";
     //private static final String BASE_URL= "https://internship-2019.herokuapp.com";
     public static final String ALREADY_CALLED_FOR_LIST_KEY="already_called_for_list";
-    public static final String ALREADY_CALLED_FOR_FAVORITE_CHANGE="already_called_for_favorite_change";
+    public static final String ALREADY_CALLED_FOR_FAVORITE_CHANGE_KEY="already_called_for_favorite_change";
     public static final String FETCHED_DATA_FOR_LIST_KEY="fetched_data_for_list";
-    public static final String IS_NO_CONNECTION_TEXT_VIEW_VISIBLE="is_no_connection_text_view_visible";
-    public static final String IS_LIST_PROGRESS_BAR_VISIBLE="is_list_progress_bar_visible";
+    public static final String IS_NO_CONNECTION_TEXT_VIEW_VISIBLE_KEY="is_no_connection_text_view_visible";
+    public static final String IS_LIST_PROGRESS_BAR_VISIBLE_KEY="is_list_progress_bar_visible";
 
     public static final String SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY="spot_id_key";
     public static final String SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY="spot_location_key";
-    public static final String SPOT_INDEX_IN_MAIN_LIST="spot_index_in_main_list";
+    public static final String SPOT_INDEX_IN_MAIN_LIST_KEY="spot_index_in_main_list";
 
     public static final int FILTER_ACTIVITY_RESULT_CODE=100;
     public static final int DETAILS_ACTIVITY_RESULT_CODE=900;
@@ -80,7 +80,6 @@ implements NetworkUtils.SpotsListFetcher,
         NetworkUtils.spotChangeFavoriteStateListener=this;
 
         Log.d(MainActivity.TAG,"Check network connectivity: "+NetworkUtils.isNetworkAvailable(this));
-        //checkNetworkEverySeconds(5000);
 
         if(savedInstanceState==null){
             Log.d(MainActivity.TAG,"THERE IS NOTHING IN THE SAVED INSTANCE!");
@@ -114,7 +113,7 @@ implements NetworkUtils.SpotsListFetcher,
                     setViewsInvisible();
                     performAllSpotsRequest("",0);
                 }else{
-                    Toast.makeText(getApplicationContext(),"No Internet Connection",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),getString(R.string.no_internet_connection_toast_text),Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -140,8 +139,8 @@ implements NetworkUtils.SpotsListFetcher,
             Log.d(MainActivity.TAG,"BOOLEAN ALREADY CALLED FOR THE LIST IS NOT IN THE SAVED INSTANCE");
         }
 
-        if(savedInstanceState.containsKey(ALREADY_CALLED_FOR_FAVORITE_CHANGE)){
-            this.alreadyCalledForFavoriteChange=savedInstanceState.getBoolean(ALREADY_CALLED_FOR_FAVORITE_CHANGE);
+        if(savedInstanceState.containsKey(ALREADY_CALLED_FOR_FAVORITE_CHANGE_KEY)){
+            this.alreadyCalledForFavoriteChange=savedInstanceState.getBoolean(ALREADY_CALLED_FOR_FAVORITE_CHANGE_KEY);
         }else{
             Log.d(MainActivity.TAG,"BOOLEAN ALREADY CALLED FOR FAVORITE CHANGE IS NOT IN THE SAVED INSTANCE");
         }
@@ -153,8 +152,8 @@ implements NetworkUtils.SpotsListFetcher,
             Log.d(MainActivity.TAG,"SERIALIZABLE SPOTS LIST IS NOT IN THE SAVED INSTANCE");
         }
 
-        if(savedInstanceState.containsKey(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE)){
-            boolean visible = savedInstanceState.getBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE);
+        if(savedInstanceState.containsKey(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE_KEY)){
+            boolean visible = savedInstanceState.getBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE_KEY);
             if(visible){
                 noConnectionTextView.setVisibility(View.VISIBLE);
             }else{
@@ -162,8 +161,8 @@ implements NetworkUtils.SpotsListFetcher,
             }
         }
 
-        if(savedInstanceState.containsKey(IS_LIST_PROGRESS_BAR_VISIBLE)){
-            boolean visible = savedInstanceState.getBoolean(IS_LIST_PROGRESS_BAR_VISIBLE);
+        if(savedInstanceState.containsKey(IS_LIST_PROGRESS_BAR_VISIBLE_KEY)){
+            boolean visible = savedInstanceState.getBoolean(IS_LIST_PROGRESS_BAR_VISIBLE_KEY);
             if(visible){
                 listProgressBar.setVisibility(View.VISIBLE);
             }else{
@@ -197,14 +196,14 @@ implements NetworkUtils.SpotsListFetcher,
 
     public void openDetailsActivity(String spotId, String location,int index_in_list){
         if(spotId==null || location==null){
-            Toast.makeText(this,"Error opening Details",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.error_opening_details_toast_text),Toast.LENGTH_SHORT).show();
             return;
         }
         Intent detailActivityStartIntent = new Intent(this,DetailActivity.class);
         detailActivityStartIntent.putExtra(SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY,spotId);
         detailActivityStartIntent.putExtra(SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY,location);
-        detailActivityStartIntent.putExtra(SPOT_INDEX_IN_MAIN_LIST,index_in_list);
-        //startActivity(detailActivityStartIntent);
+        detailActivityStartIntent.putExtra(SPOT_INDEX_IN_MAIN_LIST_KEY,index_in_list);
+
         startActivityForResult(detailActivityStartIntent,
                 DETAILS_ACTIVITY_RESULT_CODE);
     }
@@ -236,7 +235,7 @@ implements NetworkUtils.SpotsListFetcher,
                 }
             }
             if(resultCode==RESULT_CANCELED){
-                Toast.makeText(this,"No filter applied",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,getString(R.string.no_filter_applied_toast_text),Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -313,7 +312,7 @@ implements NetworkUtils.SpotsListFetcher,
                     setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
         }
         if(result==NetworkUtils.RESULT_ERROR_CHANGE_STATE){
-            Toast.makeText(this,"Error: Could not mark/unmark",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.could_not_mark_unmark_toast_text),Toast.LENGTH_SHORT).show();
             return;
         }
         return;
@@ -343,18 +342,18 @@ implements NetworkUtils.SpotsListFetcher,
     public void onSaveInstanceState(Bundle outState) {
 
         outState.putBoolean(ALREADY_CALLED_FOR_LIST_KEY,this.alreadyCalledForList);
-        outState.putBoolean(ALREADY_CALLED_FOR_FAVORITE_CHANGE,this.alreadyCalledForFavoriteChange);
+        outState.putBoolean(ALREADY_CALLED_FOR_FAVORITE_CHANGE_KEY,this.alreadyCalledForFavoriteChange);
         outState.putSerializable(FETCHED_DATA_FOR_LIST_KEY,this.spotsList);
         if(listProgressBar.getVisibility()==View.VISIBLE){
-            outState.putBoolean(IS_LIST_PROGRESS_BAR_VISIBLE,true);
+            outState.putBoolean(IS_LIST_PROGRESS_BAR_VISIBLE_KEY,true);
         }else{
-            outState.putBoolean(IS_LIST_PROGRESS_BAR_VISIBLE,false);
+            outState.putBoolean(IS_LIST_PROGRESS_BAR_VISIBLE_KEY,false);
         }
 
         if(noConnectionTextView.getVisibility()==View.VISIBLE){
-            outState.putBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE,true);
+            outState.putBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE_KEY,true);
         }else{
-            outState.putBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE,false);
+            outState.putBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE_KEY,false);
         }
         super.onSaveInstanceState(outState);
     }
