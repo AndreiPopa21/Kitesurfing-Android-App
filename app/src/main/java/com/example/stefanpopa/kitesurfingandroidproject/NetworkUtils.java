@@ -189,6 +189,8 @@ public class NetworkUtils {
             public void onFailure(Call<Spot_Details_Result> call, Throwable t) {
                 Log.d(MainActivity.TAG,"onFailure: Something went wrong with the server");
                 Log.d(MainActivity.TAG,t.toString());
+                NetworkUtils.spotDetailsFetchListener.
+                    onSpotDetailsFetcher(RESULT_ERROR_DETAILS_RETURNED,null);
             }
         });
     }
@@ -227,6 +229,8 @@ public class NetworkUtils {
             public void onFailure(Call<Spot_All_Result> call, Throwable t) {
                 Log.d(MainActivity.TAG,"onFailure: Something went wrong with the server");
                 Log.d(MainActivity.TAG,t.toString());
+                NetworkUtils.allListFetchListener.
+                        onSpotsListFetcher(RESULT_ERROR_RETURNED_ALL_LIST,null);
             }
         });
     }
