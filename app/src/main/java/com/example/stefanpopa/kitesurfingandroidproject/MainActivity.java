@@ -188,45 +188,11 @@ implements NetworkUtils.SpotsListFetcher,
         spotsRecyclerView.setAdapter(null);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-
-        outState.putBoolean(ALREADY_CALLED_FOR_LIST_KEY,this.alreadyCalledForList);
-        outState.putBoolean(ALREADY_CALLED_FOR_FAVORITE_CHANGE,this.alreadyCalledForFavoriteChange);
-        outState.putSerializable(FETCHED_DATA_FOR_LIST_KEY,this.spotsList);
-        if(listProgressBar.getVisibility()==View.VISIBLE){
-            outState.putBoolean(IS_LIST_PROGRESS_BAR_VISIBLE,true);
-        }else{
-            outState.putBoolean(IS_LIST_PROGRESS_BAR_VISIBLE,false);
-        }
-
-        if(noConnectionTextView.getVisibility()==View.VISIBLE){
-            outState.putBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE,true);
-        }else{
-            outState.putBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE,false);
-        }
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onSpotsListFetcher(Response<Spot_All_Result> list) {
-        listProgressBar.setVisibility(View.INVISIBLE);
-        noConnectionTextView.setVisibility(View.INVISIBLE);
-        this.spotsList=list.body();
-        this.alreadyCalledForList=false;
-        createSpotsRecyclerView(this.spotsList);
-    }
-
     private void createSpotsRecyclerView(Spot_All_Result spotsList){
         spotsRecyclerView.setHasFixedSize(true);
         spotsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         spotsAdapter=new SpotsAdapter(this,spotsList,this,this);
         spotsRecyclerView.setAdapter(spotsAdapter);
-    }
-
-    @Override
-    public void onSpotClick(String spotId,String location,int index_in_list) {
-        openDetailsActivity(spotId,location,index_in_list);
     }
 
     public void openDetailsActivity(String spotId, String location,int index_in_list){
@@ -241,36 +207,6 @@ implements NetworkUtils.SpotsListFetcher,
         //startActivity(detailActivityStartIntent);
         startActivityForResult(detailActivityStartIntent,
                 DETAILS_ACTIVITY_RESULT_CODE);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(MainActivity.TAG,"Entered onStart()");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(MainActivity.TAG,"Entered onResume()");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(MainActivity.TAG,"Entered onPause()");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(MainActivity.TAG,"Entered onStop()");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(MainActivity.TAG,"Entered onDestroy()");
     }
 
     private void openFilterActivity(){
@@ -355,8 +291,8 @@ implements NetworkUtils.SpotsListFetcher,
 
         alreadyCalledForFavoriteChange=false;
         if(result==NetworkUtils.RESULT_ADDED_FAVORITE){
-            Toast.makeText(this,"Added to favorites: "
-                    +itemView.getIndex_in_list(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Added "
+                    +itemView.getName()+" to favorites",Toast.LENGTH_SHORT).show();
             itemView.setFavorite(true);
             spotsList.getAll_result_children().
                     get(itemView.getIndex_in_list()).setFavorite(true);
@@ -365,8 +301,8 @@ implements NetworkUtils.SpotsListFetcher,
 
         }
         if(result==NetworkUtils.RESULT_REMOVED_FAVORITE){
-            Toast.makeText(this,"Remo from favorites: "
-                    +itemView.getIndex_in_list(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Removed "
+                    +itemView.getName()+ "from favorites",Toast.LENGTH_SHORT).show();
             itemView.setFavorite(false);
             spotsList.getAll_result_children().
                     get(itemView.getIndex_in_list()).setFavorite(false);
@@ -374,9 +310,44 @@ implements NetworkUtils.SpotsListFetcher,
                     setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
         }
         if(result==NetworkUtils.RESULT_ERROR_CHANGE_STATE){
-            Toast.makeText(this,"Could not mark/unmark",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Error: Could not mark/unmark",Toast.LENGTH_SHORT).show();
             return;
         }
         return;
     }
+
+    @Override
+    public void onSpotsListFetcher(Response<Spot_All_Result> list) {
+        listProgressBar.setVisibility(View.INVISIBLE);
+        noConnectionTextView.setVisibility(View.INVISIBLE);
+        this.spotsList=list.body();
+        this.alreadyCalledForList=false;
+        createSpotsRecyclerView(this.spotsList);
+    }
+
+    @Override
+    public void onSpotClick(String spotId,String location,int index_in_list) {
+        openDetailsActivity(spotId,location,index_in_list);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putBoolean(ALREADY_CALLED_FOR_LIST_KEY,this.alreadyCalledForList);
+        outState.putBoolean(ALREADY_CALLED_FOR_FAVORITE_CHANGE,this.alreadyCalledForFavoriteChange);
+        outState.putSerializable(FETCHED_DATA_FOR_LIST_KEY,this.spotsList);
+        if(listProgressBar.getVisibility()==View.VISIBLE){
+            outState.putBoolean(IS_LIST_PROGRESS_BAR_VISIBLE,true);
+        }else{
+            outState.putBoolean(IS_LIST_PROGRESS_BAR_VISIBLE,false);
+        }
+
+        if(noConnectionTextView.getVisibility()==View.VISIBLE){
+            outState.putBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE,true);
+        }else{
+            outState.putBoolean(IS_NO_CONNECTION_TEXT_VIEW_VISIBLE,false);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
 }
