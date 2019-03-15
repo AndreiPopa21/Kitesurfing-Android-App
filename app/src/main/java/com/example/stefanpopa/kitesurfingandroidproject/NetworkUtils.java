@@ -32,11 +32,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkUtils {
 
     public interface SpotsListFetcher{
-        void onSpotsListFetcher(Response<Spot_All_Result> list);
+        void onSpotsListFetcher(int result,Response<Spot_All_Result> list);
     }
 
     public interface SpotDetailsFetcher{
-        void onSpotDetailsFetcher(SpotDetails spotDetails);
+        void onSpotDetailsFetcher(int result,SpotDetails spotDetails);
     }
 
     public interface SpotChangeFavoriteState{
@@ -54,6 +54,12 @@ public class NetworkUtils {
     public static final int RESULT_ADDED_FAVORITE= -2312;
     public static final int RESULT_REMOVED_FAVORITE = -212144;
     public static final int RESULT_ERROR_CHANGE_STATE = -77777;
+
+    public static final int RESULT_RETURNED_ALL_LIST= 2812711;
+    public static final int RESULT_ERROR_RETURNED_ALL_LIST= -76666;
+
+    public static final int RESULT_DETAILS_RETURNED= 98999;
+    public static final int RESULT_ERROR_DETAILS_RETURNED = -912221;
 
     public static void displayResponseGetAllSpot(Response<Spot_All_Result> response){
         switch(response.code()){
@@ -171,7 +177,11 @@ public class NetworkUtils {
                 NetworkUtils.displayResponseGetSpotDetails(response);
                 if(response.isSuccessful()){
                     SpotDetails spotDetails = parseResponseToSpotDetails(response);
-                    NetworkUtils.spotDetailsFetchListener.onSpotDetailsFetcher(spotDetails);
+                    NetworkUtils.spotDetailsFetchListener.
+                            onSpotDetailsFetcher(RESULT_DETAILS_RETURNED,spotDetails);
+                }else{
+                    NetworkUtils.spotDetailsFetchListener.
+                            onSpotDetailsFetcher(RESULT_ERROR_DETAILS_RETURNED,null);
                 }
             }
 
@@ -205,7 +215,11 @@ public class NetworkUtils {
                 NetworkUtils.displayResponseGetAllSpot(response);
                 if(response.isSuccessful()){
                     //generate RecyclerView
-                    NetworkUtils.allListFetchListener.onSpotsListFetcher(response);
+                    NetworkUtils.allListFetchListener.
+                            onSpotsListFetcher(RESULT_RETURNED_ALL_LIST,response);
+                }else{
+                    NetworkUtils.allListFetchListener.
+                            onSpotsListFetcher(RESULT_ERROR_RETURNED_ALL_LIST,null);
                 }
             }
 
@@ -269,10 +283,6 @@ public class NetworkUtils {
     public static void sendNetworkAddFavorites(Favorites_Add_Body body,
                                                String baseUrl,
                                                final SpotsAdapter.SpotsViewHolder itemView){
-        /*if(isFavorited){
-            Log.d(MainActivity.TAG,"Item with spotId: "+body.getSpotId()+" has already been favorited");
-            return;
-        }*/
 
         Retrofit retrofit = createRetrofitClient(baseUrl,
                 60,60,60);

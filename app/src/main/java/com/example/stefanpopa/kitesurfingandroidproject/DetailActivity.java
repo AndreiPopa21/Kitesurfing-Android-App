@@ -396,30 +396,34 @@ implements NetworkUtils.SpotDetailsFetcher,
     }
 
     @Override
-    public void onSpotDetailsFetcher(SpotDetails spotDetails) {
+    public void onSpotDetailsFetcher(int result,SpotDetails spotDetails) {
         this.alreadyCalledForDetails=false;
         this.spotDetails=spotDetails;
-        if(spotDetails!=null){
+        if(result==NetworkUtils.RESULT_DETAILS_RETURNED){
             detailProgressBar.setVisibility(View.INVISIBLE);
             detailNoConnectionTextView.setVisibility(View.INVISIBLE);
-            //Log.d(DetailActivity.DETAIL_TAG,"Details have been succesfully received");
+            Log.d(DetailActivity.DETAIL_TAG,"Details have been succesfully received");
             Toast.makeText(this,"Details have been succesfully received",Toast.LENGTH_SHORT).show();
             populateLayout(spotDetails);
-        }else{
+        }
+        if(result==NetworkUtils.RESULT_ERROR_DETAILS_RETURNED){
             detailProgressBar.setVisibility(View.INVISIBLE);
             detailNoConnectionTextView.setVisibility(View.INVISIBLE);
+            Log.d(DetailActivity.DETAIL_TAG,"Details have not been succesfully received");
             Toast.makeText(this,"Details have not been succesfully received",Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onBackPressed() {
+        if(alreadyCalledForFavoriteChange)
+            return;
         Intent resultIntent = new Intent();
         resultIntent.putExtra(SPOT_DETAIL_RESULT_IS_FAVORITE,spotIsFavorite);
         resultIntent.putExtra(SPOT_DETAIL_RESULT_INDEX_IN_MAIN_LIST,spotIndexInMainList);
         setResult(RESULT_OK,resultIntent);
         Log.d(DetailActivity.DETAIL_TAG,"Back button was pressed");
-        Toast.makeText(this,"Back button pressed",Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"Back button pressed",Toast.LENGTH_LONG).show();
         super.onBackPressed();
     }
 

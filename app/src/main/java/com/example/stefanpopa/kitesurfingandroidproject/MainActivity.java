@@ -317,12 +317,18 @@ implements NetworkUtils.SpotsListFetcher,
     }
 
     @Override
-    public void onSpotsListFetcher(Response<Spot_All_Result> list) {
+    public void onSpotsListFetcher(int result,Response<Spot_All_Result> list) {
         listProgressBar.setVisibility(View.INVISIBLE);
         noConnectionTextView.setVisibility(View.INVISIBLE);
-        this.spotsList=list.body();
         this.alreadyCalledForList=false;
-        createSpotsRecyclerView(this.spotsList);
+
+        if(result==NetworkUtils.RESULT_RETURNED_ALL_LIST){
+            this.spotsList=list.body();
+            createSpotsRecyclerView(this.spotsList);
+        }
+        if(result==NetworkUtils.RESULT_ERROR_RETURNED_ALL_LIST){
+            noConnectionTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
