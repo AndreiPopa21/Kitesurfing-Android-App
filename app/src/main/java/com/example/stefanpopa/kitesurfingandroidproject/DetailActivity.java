@@ -34,8 +34,13 @@ implements NetworkUtils.SpotDetailsFetcher,
     public static final String SPOT_DETAILS_OBJECT="spot_details_object";
     public static final String ALREADY_CALLED_FOR_DETAILS_KEY="already_called_for_list";
     public static final String DETAIL_ALREADY_CALLED_FOR_FAVORITE_CHANGE="detail_already_favorite_change";
+
     public static final String SPOT_DETAIL_ID="spot_detail_id";
     public static final String SPOT_DETAIL_LOCATION="spot_detail_location";
+    public static final String SPOT_DETAIL_INDEX_IN_MAIN_LIST="spot_detail_index_in_main_list";
+
+    public static final String SPOT_DETAIL_RESULT_IS_FAVORITE="spot_detail_result_is_favorite";
+    public static final String SPOT_DETAIL_RESULT_INDEX_IN_MAIN_LIST="spot_detail_result_index_in_main_list";
 
     private ProgressBar detailProgressBar;
     private TextView detailNoConnectionTextView;
@@ -65,10 +70,11 @@ implements NetworkUtils.SpotDetailsFetcher,
     private boolean alreadyCalledForDetails=false;
     private boolean alreadyCalledForFavoriteChange=false;
 
+    //Data passed via Intent
     private String spotId;
     private String spotLocation;
-
     private boolean spotIsFavorite=false;
+    private int spotIndexInMainList;
 
     private SpotDetails spotDetails=null;//object that holds all details about our spot
 
@@ -262,7 +268,7 @@ implements NetworkUtils.SpotDetailsFetcher,
     }
 
     private void closeOnError(String errorMessage){
-        Log.d(DetailActivity.DETAIL_TAG,"Error: "+errorMessage);
+        Log.e(DetailActivity.DETAIL_TAG,"Error: "+errorMessage);
         finish();
     }
 
@@ -271,8 +277,16 @@ implements NetworkUtils.SpotDetailsFetcher,
         if(extras==null){
             return false;
         }
+        if(!extras.containsKey(MainActivity.SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY))
+            closeOnError("Intent not containing spotId");
+        if(!extras.containsKey(MainActivity.SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY))
+            closeOnError("Intent not containing spotLocation");
+        if(!extras.containsKey(MainActivity.SPOT_INDEX_IN_MAIN_LIST))
+            closeOnError("Intent not containing spot_index_in_main_list");
+
         spotLocation = extras.getString(MainActivity.SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY);
         spotId= extras.getString(MainActivity.SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY);
+        spotIndexInMainList=extras.getInt(MainActivity.SPOT_INDEX_IN_MAIN_LIST);
         if(spotLocation==null || spotId==null){
             return false;
         }
@@ -305,14 +319,21 @@ implements NetworkUtils.SpotDetailsFetcher,
             spotId=savedInstanceState.getString(SPOT_DETAIL_ID);
         }else{
             spotId=null;
-            closeOnError("There is a problem getting the spotId");
+            closeOnError("There is a problem getting the spotId from onSavedInstance");
         }
 
         if(savedInstanceState.containsKey(SPOT_DETAIL_LOCATION)){
             spotLocation=savedInstanceState.getString(SPOT_DETAIL_LOCATION);
         }else{
             spotLocation=null;
-            closeOnError("There is a problem getting the spotLocation");
+            closeOnError("There is a problem getting the spotLocation from onSavedInstance");
+        }
+
+        if(savedInstanceState.containsKey(SPOT_DETAIL_INDEX_IN_MAIN_LIST)){
+            spotIndexInMainList=savedInstanceState.getInt(SPOT_DETAIL_INDEX_IN_MAIN_LIST);
+        }else{
+            spotIndexInMainList=0;
+            closeOnError("There is a problem getting the spotIndexInMainList from onSavedInstance");
         }
     }
 
@@ -369,6 +390,8 @@ implements NetworkUtils.SpotDetailsFetcher,
 
         outState.putString(SPOT_DETAIL_LOCATION,spotLocation);
 
+        outState.putInt(SPOT_DETAIL_INDEX_IN_MAIN_LIST,spotIndexInMainList);
+
         super.onSaveInstanceState(outState);
     }
 
@@ -391,9 +414,13 @@ implements NetworkUtils.SpotDetailsFetcher,
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(SPOT_DETAIL_RESULT_IS_FAVORITE,spotIsFavorite);
+        resultIntent.putExtra(SPOT_DETAIL_RESULT_INDEX_IN_MAIN_LIST,spotIndexInMainList);
+        setResult(RESULT_OK,resultIntent);
         Log.d(DetailActivity.DETAIL_TAG,"Back button was pressed");
         Toast.makeText(this,"Back button pressed",Toast.LENGTH_LONG).show();
+        super.onBackPressed();
     }
 
     @Override

@@ -21,7 +21,7 @@ import retrofit2.Response;
 public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHolder> {
 
     public interface SpotItemClickListener{
-        void onSpotClick(String spotId,String location);
+        void onSpotClick(String spotId,String location,int index_in_list);
     }
     public interface FavoriteStarClickListener{
         void onFavoriteStarClick(SpotsViewHolder itemView);
@@ -82,6 +82,10 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
         }else{
             return spotsList.getAll_result_children().size();
         }
+    }
+
+    public void setSpotsList(Spot_All_Result spotsList){
+        this.spotsList = spotsList;
     }
 
     public class SpotsViewHolder extends RecyclerView.ViewHolder {
@@ -165,7 +169,7 @@ public class SpotsAdapter extends RecyclerView.Adapter<SpotsAdapter.SpotsViewHol
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    spotItemClickListener.onSpotClick(getId(),getName());
+                    spotItemClickListener.onSpotClick(getId(),getName(),getIndex_in_list());
                 }
             });
             favoriteButton.setOnClickListener(new View.OnClickListener() {

@@ -46,10 +46,13 @@ implements NetworkUtils.SpotsListFetcher,
     public static final String FETCHED_DATA_FOR_LIST_KEY="fetched_data_for_list";
     public static final String IS_NO_CONNECTION_TEXT_VIEW_VISIBLE="is_no_connection_text_view_visible";
     public static final String IS_LIST_PROGRESS_BAR_VISIBLE="is_list_progress_bar_visible";
+
     public static final String SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY="spot_id_key";
     public static final String SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY="spot_location_key";
+    public static final String SPOT_INDEX_IN_MAIN_LIST="spot_index_in_main_list";
 
     public static final int FILTER_ACTIVITY_RESULT_CODE=100;
+    public static final int DETAILS_ACTIVITY_RESULT_CODE=900;
 
     private Spot_All_Result spotsList;
     private boolean alreadyCalledForList=false;
@@ -222,15 +225,22 @@ implements NetworkUtils.SpotsListFetcher,
     }
 
     @Override
-    public void onSpotClick(String spotId,String location) {
+    public void onSpotClick(String spotId,String location,int index_in_list) {
+        openDetailsActivity(spotId,location,index_in_list);
+    }
+
+    public void openDetailsActivity(String spotId, String location,int index_in_list){
         if(spotId==null || location==null){
-            Toast.makeText(this,"Error checking the details",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Error opening Details",Toast.LENGTH_SHORT).show();
             return;
         }
         Intent detailActivityStartIntent = new Intent(this,DetailActivity.class);
         detailActivityStartIntent.putExtra(SPOT_ID_KEY_FOR_THE_DETAIL_ACTIVITY,spotId);
         detailActivityStartIntent.putExtra(SPOT_LOCATION_KEY_FOR_THE_DETAIL_ACTIVITY,location);
-        startActivity(detailActivityStartIntent);
+        detailActivityStartIntent.putExtra(SPOT_INDEX_IN_MAIN_LIST,index_in_list);
+        //startActivity(detailActivityStartIntent);
+        startActivityForResult(detailActivityStartIntent,
+                DETAILS_ACTIVITY_RESULT_CODE);
     }
 
     @Override
@@ -271,7 +281,7 @@ implements NetworkUtils.SpotsListFetcher,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        NetworkUtils.spotChangeFavoriteStateListener=this;
         if(data==null)
             return;
 
@@ -291,6 +301,28 @@ implements NetworkUtils.SpotsListFetcher,
             }
             if(resultCode==RESULT_CANCELED){
                 Toast.makeText(this,"No filter applied",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if(requestCode==DETAILS_ACTIVITY_RESULT_CODE){
+            if(resultCode==RESULT_OK){
+                int index_in_main_list = data.
+                        getIntExtra(DetailActivity.SPOT_DETAIL_RESULT_INDEX_IN_MAIN_LIST,-1);
+                boolean isFav = data.
+                        getBooleanExtra(DetailActivity.SPOT_DETAIL_RESULT_IS_FAVORITE,false);
+                if(index_in_main_list == -1){
+                    Toast.makeText(this,
+                            "Error getting the right result from Details",
+                            Toast.LENGTH_SHORT).show();
+                }
+                Log.d(MainActivity.TAG,"The values returned by the Details are: index: "+
+                        String.valueOf(index_in_main_list)+" | isFav: "+String.valueOf(isFav));
+                spotsList.getAll_result_children().get(index_in_main_list).setFavorite(isFav);
+                spotsAdapter.setSpotsList(spotsList);
+                spotsAdapter.notifyDataSetChanged();
+            }
+            if(requestCode==RESULT_CANCELED){
+                Toast.makeText(this,"Error returning Details",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -323,16 +355,20 @@ implements NetworkUtils.SpotsListFetcher,
 
         alreadyCalledForFavoriteChange=false;
         if(result==NetworkUtils.RESULT_ADDED_FAVORITE){
-            Toast.makeText(this,"Added to favorites",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Added to favorites: "
+                    +itemView.getIndex_in_list(),Toast.LENGTH_SHORT).show();
             itemView.setFavorite(true);
             spotsList.getAll_result_children().
                     get(itemView.getIndex_in_list()).setFavorite(true);
             itemView.getFavoriteButton().
                     setBackground(ContextCompat.getDrawable(this,R.drawable.star_on));
+
         }
         if(result==NetworkUtils.RESULT_REMOVED_FAVORITE){
-            Toast.makeText(this,"Removed from favorites",Toast.LENGTH_SHORT).show();
-            itemView.setFavorite(false);spotsList.getAll_result_children().
+            Toast.makeText(this,"Remo from favorites: "
+                    +itemView.getIndex_in_list(),Toast.LENGTH_SHORT).show();
+            itemView.setFavorite(false);
+            spotsList.getAll_result_children().
                     get(itemView.getIndex_in_list()).setFavorite(false);
             itemView.getFavoriteButton().
                     setBackground(ContextCompat.getDrawable(this,R.drawable.star_off));
