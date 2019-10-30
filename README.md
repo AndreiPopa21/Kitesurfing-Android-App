@@ -1,9 +1,10 @@
 Kitesurfing App for Android
 ===========================
+> An app for visualizing different spot locations for kitesurfing all around the world. The app was requested as part of a job interview assignment and uses a custom API in the background in order to perform its API calls.
 
 The app implements succesfully the following features:
 * Has **LIST**, **FILTER** and **DETAIL** activities
-* Handles network-calls to different API endpoints
+* Handles network-calls to different **API endpoints**
 * **Handles network-call errors** and converts JSON files accordingly
 * Activities handle screen rotations and **configuration changes** and **preserve information between states**
 * Layout is **scalable and adaptable** to different screen sizes and densities
@@ -19,3 +20,13 @@ Implementation highlights:
 * Different boolean variables are used in order to reduce the number of network requests and to prevent overlapping calls
 * If no network operation is performed, current data is **cached between screen configuration changes**
 * Used an `Intent` for opening a spot location on GoogleMaps 
+
+## App Info
+
+### Author
+
+Stefan-Andrei Popa
+
+### Version
+
+1.0.0
